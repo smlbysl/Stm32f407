@@ -1,7 +1,5 @@
 # ===== STM32CubeIDE =====
-.project
-.cproject
-.settings/
+
 
 # ===== Build outputs =====
 Debug/
