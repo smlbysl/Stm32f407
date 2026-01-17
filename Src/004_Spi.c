@@ -1,3 +1,11 @@
+/*
+ * 004_Spi.c
+ *
+ *  Created on: Jan 15, 2026
+ *      Author: smlby
+ */
+
+
 /**
  ******************************************************************************
  * @file           : main.c
@@ -25,6 +33,8 @@
 #include "exti.h"
 #include "exti_cfg.h"
 #include "nvic.h"
+#include "spi.h"
+#include "spi_cfg.h"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
@@ -42,30 +52,29 @@ void delayFunc (void)
 int main(void)
 {
 
+	uint8_t retval = 0xFF;
 
+	uint16_t array[1] = {255};
 
-	GPIOA_PCLK_EN();
+	/*GPIOA_PCLK_EN();
 	GPIOD_PCLK_EN();
 	GPIO_Init(&Gpio_ConfigHandle);
 	EXTI_Init(&EXTI_InitHandle);
 	ICU_EnableNotification(IRQ_GPIO_PA0);
+*/
+	SPI1_PCLK_EN();
+	Nvic_EnableIRQ(35);
+	Spi_Init(&SpiConfig);
 
-	Nvic_EnableIRQ(6);
+	retval = Spi_WriteTxIBBuffer(SPI_CHANNEL_1,array);
+
+	retval = Spi_Asynch_SeqTrigger(SPI_SEQUENCE_1);
+
+
 
 	while(1)
 	{
-		if (0 != ICU_Ch0_notification)
-		{
-			GPIO_ToggleOutputPin(GPIO_CHANNEL_PD12);
-			GPIO_ToggleOutputPin(GPIO_CHANNEL_PD13);
-			GPIO_ToggleOutputPin(GPIO_CHANNEL_PD14);
-			GPIO_ToggleOutputPin(GPIO_CHANNEL_PD15);
-
-			delayFunc();
-
-			ICU_Ch0_notification = 0;
-		}
-
+		Spi_Main();
 		delayFunc();
 	}
 
