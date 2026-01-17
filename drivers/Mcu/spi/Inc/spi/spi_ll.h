@@ -93,6 +93,33 @@ static inline void SPI_LL_PeripDis(Spi_Hw_RegType *p)
 {
 	p->CR1 = (p->CR1 & ~SPI_CR1_SPE_Msk) | SPI_CR1_SPE_Val(SPI_CR1_SPE_DIS);
 }
+/**
+ * @brief RX buffer not empty interrupt enable
+ *
+ * @param p
+ */
+static inline void SPI_LL_RxNotEmtyIntEn(Spi_Hw_RegType *p)
+{
+	p->CR2 = (p->CR2 & ~SPI_CR2_RXNEIE_Msk) | SPI_CR2_RXNEIE_Val(SPI_CR2_RXNEIE_INTEN);
+}
+static inline void SPI_LL_RxNotEmtyIntDis(Spi_Hw_RegType *p)
+{
+	p->CR2 = (p->CR2 & ~SPI_CR2_RXNEIE_Msk) | SPI_CR2_RXNEIE_Val(SPI_CR2_RXNEIE_INTDIS);
+}
+/**
+ * @brief Tx buffer empty interrupt enable
+ *
+ * @param p
+ */
+static inline void SPI_LL_TxEmtyIntEn(Spi_Hw_RegType *p)
+{
+	p->CR2 = (p->CR2 & ~SPI_CR2_TXEIE_Msk) | SPI_CR2_TXEIE_Val(SPI_CR2_TXEIE_INTEN);
+}
+static inline void SPI_LL_TxEmtyIntDis(Spi_Hw_RegType *p)
+{
+	p->CR2 = (p->CR2 & ~SPI_CR2_TXEIE_Msk) | SPI_CR2_TXEIE_Val(SPI_CR2_TXEIE_INTDIS);
+}
+
 
 /**
  * @brief Rol Selection
@@ -154,7 +181,7 @@ static inline void SPI_LL_RxBufferCheck(Spi_Hw_RegType *p, Std_boolean *DataBuff
  */
 static inline void SPI_LL_TxBufEmty(Spi_Hw_RegType *p,Std_boolean *DataBuffer)
 {
-	*DataBuffer = ((p->SR & SPI_SR_TXE_Msk) != SPI_SR_TXE_NOTEMTY) ? STD_FALSE: STD_TRUE;
+	*DataBuffer = ((p->SR & SPI_SR_TXE_Msk) != SPI_SR_TXE_NOTEMTY) ? STD_TRUE : STD_FALSE;
 }
 
 

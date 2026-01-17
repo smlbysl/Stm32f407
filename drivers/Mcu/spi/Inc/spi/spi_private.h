@@ -50,6 +50,7 @@ extern Std_ReturnType Spi_ChannelHandler_StartAsynch(Spi_HwUnitIdType hwId, Spi_
 /* -------------------------------------- API Definitions  ------------------------------------------------- */
 /* --------------------------------------------------------------------------------------------------------- */
 /* -------------------------------------- HwUnit Unit  ----------------------------------------------------- */
+Std_ReturnType Spi_JobHandler_ConfTransferMode(Spi_HwUnitIdType hwId, Spi_TransferModeType tmode);
 Std_ReturnType Spi_HwUnit_SwitchExDev(Spi_HwUnitIdType hwId, Spi_ExDevIdType exDevId);
 void Spi_HwUnit_Init(const Spi_ConfigType* ConfigPtr);
 /* --------------------------------------------------------------------------------------------------------- */
@@ -68,7 +69,7 @@ void Spi_JobHandler_Init(void);
 /* -------------------------------------- Seq Unit  -------------------------------------------------------- */
 Std_ReturnType Spi_SequenceHandler();
 Std_ReturnType Spi_SeqHandler_AsychSeqTrigger(Spi_SequenceIdType seqId);
-
+void Spi_SequenceHandler_Init(void);
 
 
 #endif /* MCU_SPI_INC_SPI_SPI_PRIVATE_H_ */

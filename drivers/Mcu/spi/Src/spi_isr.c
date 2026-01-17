@@ -19,7 +19,7 @@
 
 /* ========================================================================================================= */
 /* -------------------------------------- Local Variable Definition  --------------------------------------- */
-
+static void Spi_IrqHandler(Spi_HwUnitIdType hw);
 /* ========================================================================================================= */
 /* -------------------------------------- Static Function Definitions -------------------------------------- */
 
@@ -29,20 +29,29 @@
 /* ========================================================================================================= */
 /* -------------------------------------- Static Function Implementation ----------------------------------- */
 
+static void Spi_IrqHandler(Spi_HwUnitIdType hw)
+{
+    if (Rnt.controllerRnt->activeContStatus == SPI_IDLE)
+        return;
+
+    Spi_Channel_Callback(hw);
+
+}
+
 /* ========================================================================================================= */
 /* -------------------------------------- API Implementation ----------------------------------------------- */
 
 void SPI1_IRQHandler(void)
 {
-	Spi_Channel_Callback(HwIdMap[0]);
+	Spi_IrqHandler(HwIdMap[0]);
 }
 
 void SPI2_IRQHandler(void)
 {
-	Spi_Channel_Callback(HwIdMap[1]);
+	Spi_IrqHandler(HwIdMap[1]);
 }
 
 void SPI3_IRQHandler(void)
 {
-	Spi_Channel_Callback(HwIdMap[2]);
+	Spi_IrqHandler(HwIdMap[2]);
 }

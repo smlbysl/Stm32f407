@@ -76,6 +76,9 @@ int main(void)
 	{
 		Spi_Main();
 		delayFunc();
+		retval = Spi_WriteTxIBBuffer(SPI_CHANNEL_1,array);
+
+		retval = Spi_Asynch_SeqTrigger(SPI_SEQUENCE_1);
 	}
 
     /* Loop forever */

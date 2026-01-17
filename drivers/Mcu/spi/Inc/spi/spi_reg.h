@@ -335,8 +335,8 @@
 #define SPI_CR2_RXNEIE_Msk		   		(0x01UL << SPI_CR2_RXNEIE_Pos)	/*!< Length : 1 Bit */
 #define SPI_CR2_RXNEIE_Val(v) 			(((v) & 0x1UL) << SPI_CR2_RXNEIE_Pos)
 
-#define SPI_CR1_RXNEIE_INTDIS			(0UL)	/*!< RXNE interrupt masked. */
-#define SPI_CR1_RXNEIE_INTEN			(1UL)	/*!< RXNE interrupt not masked. Used to generate an interrupt request when the RXNE flag is set. */
+#define SPI_CR2_RXNEIE_INTDIS			(0UL)	/*!< RXNE interrupt masked. */
+#define SPI_CR2_RXNEIE_INTEN			(1UL)	/*!< RXNE interrupt not masked. Used to generate an interrupt request when the RXNE flag is set. */
 
 /* ----------------------------------------------- */
 /* ------------------ TXEIE ---------------------- */
@@ -348,10 +348,10 @@
  */
 #define SPI_CR2_TXEIE_Pos  				(7u)
 #define SPI_CR2_TXEIE_Msk		   		(0x01UL << SPI_CR2_TXEIE_Pos)	/*!< Length : 1 Bit */
-#define SPI_CR2_TXEIE_Val(v) 			(((v) & 0x1UL) << SPI_CR2_TXEIE_PSs)
+#define SPI_CR2_TXEIE_Val(v) 			(((v) & 0x1UL) << SPI_CR2_TXEIE_Pos)
 
-#define SPI_CR1_TXEIE_INTDIS			(0UL)	/*!< TXE interrupt masked. */
-#define SPI_CR1_TXEIE_INTEN				(1UL)	/*!< TXE interrupt not masked. Used to generate an interrupt request when the TXE flag is set. */
+#define SPI_CR2_TXEIE_INTDIS			(0UL)	/*!< TXE interrupt masked. */
+#define SPI_CR2_TXEIE_INTEN				(1UL)	/*!< TXE interrupt not masked. Used to generate an interrupt request when the TXE flag is set. */
 
 /* --------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------- SR BITS ----------------------------------------------------- */

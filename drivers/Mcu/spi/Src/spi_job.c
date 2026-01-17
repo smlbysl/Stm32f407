@@ -177,6 +177,7 @@ Std_ReturnType Spi_JobHandler_StartJob(Spi_HwUnitIdType hwId, Spi_JobIdType requ
 	/* Configure device */
 	Std_ReturnType 	retVal = E_NOT_OK;
 
+	uint8_t i;
 	Spi_JobIdType		activeJobId	= Rnt.controllerRnt[hwId].activeJobId;
 
 	const Spi_JobConfigType		*jobCfg	= &CfgPtr->jobConfig[requestJobId];
@@ -195,6 +196,13 @@ Std_ReturnType Spi_JobHandler_StartJob(Spi_HwUnitIdType hwId, Spi_JobIdType requ
 			Rnt.controllerRnt[hwId].prevJobId 	= Rnt.controllerRnt[hwId].activeJobId;
 			Rnt.controllerRnt[hwId].activeJobId = requestJobId;
 			jobRnt[requestJobId].channelIndex   = 0;
+			for(i = 0 ; i < jobCfg->channelCount ; i++)
+			{
+				Rnt.channelRnt[jobCfg->channelList[i]].status = SPI_CHANNEL_PENDING;
+
+			}
+
+			Spi_JobHandler(hwId);
 		}
 	}
 	else

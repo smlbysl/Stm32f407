@@ -165,6 +165,7 @@ Std_ReturnType Spi_HwUnit_SwitchExDev(Spi_HwUnitIdType hwId, Spi_ExDevIdType exD
 
 		Rnt.controllerRnt[hwId].activeContStatus = SPI_BUSY;
 
+
 		/*Try to Change Device */
 		Spi_HwUnit_SetExDev(hwId, exDevId);
 
@@ -185,5 +186,48 @@ Std_ReturnType Spi_HwUnit_SwitchExDev(Spi_HwUnitIdType hwId, Spi_ExDevIdType exD
 	return retVal;
 }
 
+
+Std_ReturnType Spi_JobHandler_ConfTransferMode(Spi_HwUnitIdType hwId, Spi_TransferModeType tmode)
+{
+	Std_ReturnType 	retVal		= E_NOT_OK;
+	Spi_Hw_RegType	*hwBase		= CfgPtr->controllerConfig[hwId].base;
+
+	/*State for HwUnit*/
+	if ((SPI_IDLE == Rnt.controllerRnt[hwId].activeContStatus ) &&
+		(STD_FALSE == SPI_LL_IsBusy(hwBase)))
+	{
+		Rnt.controllerRnt[hwId].activeContStatus = SPI_BUSY;
+		/* Disable External Device*/
+		SPI_LL_PeripDis(hwBase);
+
+		if(SPI_TRANSFER_INTERRUPT == tmode)
+		{
+			SPI_LL_RxNotEmtyIntEn(hwBase);
+			SPI_LL_TxEmtyIntEn(hwBase);
+		}
+		else
+		{
+			SPI_LL_RxNotEmtyIntDis(hwBase);
+			SPI_LL_TxEmtyIntDis(hwBase);
+		}
+
+		/*Enable Device */
+		SPI_LL_PeripEn(hwBase);
+
+		Rnt.controllerRnt[hwId].activeContStatus = SPI_IDLE;
+
+		retVal		= E_OK;
+	}
+	else if (SPI_UNINIT == Rnt.controllerRnt[hwId].activeContStatus)
+	{
+		/* Error Initiate First */
+	}
+	else
+	{
+		/* Do Nothing*/
+	}
+
+	return retVal;
+}
 
 

@@ -165,6 +165,7 @@ typedef enum
     SPI_TRANSFER_POLLING,
     SPI_TRANSFER_INTERRUPT,
 } Spi_TransferModeType;
+
 /* ---------------------------------------------------------------- */
 /* ----------------- Job Definitions ------------------------------ */
 typedef enum
@@ -174,6 +175,12 @@ typedef enum
 	SPI_JOB_UNDEFINED
 }Spi_JobIdType;
 
+typedef enum
+{
+	SPI_Job_INIT = 0,
+	SPI_Job_PROCEDING,
+	SPI_Job_IDLE
+}Spi_JobStateMachType;
 
 /* ---------------------------------------------------------------- */
 /* ----------------- Sequence Definitions ------------------------- */
@@ -191,6 +198,15 @@ typedef enum
 	SPI_SEQUENCE_PRIO,
 	SPI_SEQUENCE_PRIO_UNDEFINED
 }Spi_SeqPrioType;
+
+
+typedef enum
+{
+	SPI_SEQUENCE_INIT = 0,
+	SPI_SEQUENCE_PROCEDING,
+	SPI_SEQUENCE_IDLE
+}Spi_SeqStateMachType;
+
 
 /* --------------------------------------------------------------------------------------------------------- */
 /* -------------------------------------- Struct Definitions  ---------------------------------------------- */

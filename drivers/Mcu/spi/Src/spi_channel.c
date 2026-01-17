@@ -61,7 +61,6 @@ Std_ReturnType Spi_ChannelHandler_StartAsynch(Spi_HwUnitIdType hwId, Spi_Channel
 	Std_ReturnType 			retVal	= E_NOT_OK;
 	Spi_Hw_RegType			*hwBase	= CfgPtr->controllerConfig[hwId].base;
 	Spi_ChannelRuntimeType	*chRt	= &channelRnt[chId];
-	Spi_FrameConfigType		*frame	= CfgPtr->externalDeviceConfig[CfgPtr->jobConfig[Rnt.controllerRnt[hwId].activeJobId].exDeviceID].frame;
 
 	if ((SPI_IDLE == Rnt.controllerRnt[hwId].activeContStatus) &&
 		(STD_FALSE == SPI_LL_IsBusy(hwBase)))
@@ -75,51 +74,29 @@ Std_ReturnType Spi_ChannelHandler_StartAsynch(Spi_HwUnitIdType hwId, Spi_Channel
 		chRt->txPtr = &Spi_IB_Tx[chId][0];
 		chRt->rxPtr = &Spi_IB_Rx[chId][0];
 
-
-		SPI_LL_PeripEn(hwBase);
+		SPI_LL_PeripDis(hwBase);
 
 		switch (CfgPtr->channelConfig[chId].dir)
 		{
 
 		case SPI_CH_TX:
 
-			if (SPI_DATAFF_8BIT == frame->dataWidth)
-			{
-				SPI_LL_WriteDR_8Bit(hwBase, ((uint8_t*)chRt->txPtr)[chRt->txIndex]);
-			}
-			else
-			{
-				SPI_LL_WriteDR_16Bit(hwBase, ((uint16_t*)chRt->txPtr)[chRt->txIndex]);
-			}
-			chRt->txIndex ++;
+			SPI_LL_TxEmtyIntEn(hwBase);
+			SPI_LL_PeripEn(hwBase);
 			break;
 
 		case SPI_CH_RX:
 
-	    	if(SPI_DATAFF_8BIT == frame->dataWidth)
-	    	{
-	    		SPI_LL_WriteDR_8Bit(hwBase, SPI_DUMMY_BUFFER_8);
-	    	}
-	    	else
-	    	{
-	    		SPI_LL_WriteDR_16Bit(hwBase, SPI_DUMMY_BUFFER_16);
-	    	}
-	    	chRt->txIndex ++;
+			SPI_LL_RxNotEmtyIntEn(hwBase);
+			SPI_LL_PeripEn(hwBase);
 	    	break;
 
 		case SPI_CH_TXRX:
 
-			if (SPI_DATAFF_8BIT == frame->dataWidth)
-			{
-				SPI_LL_WriteDR_8Bit(hwBase, ((uint8_t*)chRt->txPtr)[chRt->txIndex]);
-			}
-			else
-			{
-				SPI_LL_WriteDR_16Bit(hwBase, ((uint16_t*)chRt->txPtr)[chRt->txIndex]);
-			}
-			chRt->txIndex ++;
+			SPI_LL_TxEmtyIntEn(hwBase);
+			SPI_LL_RxNotEmtyIntEn(hwBase);
+			SPI_LL_PeripEn(hwBase);
 			break;
-
 
 		default:
 		}
@@ -312,6 +289,9 @@ void Spi_Channel_Callback(Spi_HwUnitIdType hwID)
 		(rxDone) &&
 	    (STD_FALSE == SPI_LL_IsBusy(hwBase)))   // BSY == 0
 	{
+		SPI_LL_PeripDis(hwBase);
+		SPI_LL_TxEmtyIntDis(hwBase);
+		SPI_LL_RxNotEmtyIntDis(hwBase);
 	    Rnt.channelRnt[hwID].status = SPI_CHANNEL_OK;
 	    Rnt.controllerRnt[hwID].activeContStatus = SPI_IDLE;
 	}
