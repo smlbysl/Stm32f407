@@ -27,71 +27,55 @@ static Spi_SeqStateMachType seqStateMach[SPI_HWID_MAX];
 /* ========================================================================================================= */
 /* -------------------------------------- Static Function Definitions -------------------------------------- */
 static Std_ReturnType Spi_SeqHandler_EndSeq(Spi_HwUnitIdType hwId);
-static Std_ReturnType Spi_SeqHandler_StartSeq(Spi_HwUnitIdType hwId);
+static void Spi_SeqHandler_StartSeq(Spi_HwUnitIdType hwId);
 static void Spi_SequenceHandler_RntInit(void);
 /* ========================================================================================================= */
 /* -------------------------------------- Inline Definition  ----------------------------------------------- */
 /* ========================================================================================================= */
 /* -------------------------------------- Static Function Implementation ----------------------------------- */
-static Std_ReturnType Spi_SeqHandler_StartSeq(Spi_HwUnitIdType hwId)
+static void Spi_SeqHandler_StartSeq(Spi_HwUnitIdType hwId)
 {
 	uint8_t i;
-	Std_ReturnType 	retVal = E_NOT_OK;
 	const Spi_SequenceConfigType *seqCfg;
 	Spi_SequenceIdType 	temp = SPI_SEQUENCE_UNDEFINED;
 
 	seqCfg = CfgPtr->seqConfig;
 
-	/*if((((SPI_SEQ_OK == seqRnt[actSeqId].status) ||
-		(SPI_SEQ_FAILED == seqRnt[actSeqId].status) ||
-		(SPI_SEQ_CANCELED == seqRnt[actSeqId].status)) &&
-		(SPI_SEQUENCE_IDLE == seqStateMach[hwId])) ||
-		(SPI_SEQUENCE_INIT == seqStateMach[hwId]))
-	{*/
-		for(i = 0 ; i < SPI_SEQUENCE_MAX  ; i++)
+	for(i = 0 ; i < SPI_SEQUENCE_MAX  ; i++)
+	{
+		if((SPI_SEQ_PENDING == seqRnt[seqIdMap[i]].status) &&
+				(seqCfg[seqIdMap[i]].hwUnitID == hwId))
 		{
-			if((SPI_SEQ_PENDING == seqRnt[seqIdMap[i]].status) &&
-					(seqCfg[seqIdMap[i]].hwUnitID == hwId))
+			if(SPI_SEQUENCE_UNDEFINED != temp)
 			{
-				if(SPI_SEQUENCE_UNDEFINED != temp)
-				{
-					if (seqCfg[seqIdMap[i]].priority < seqCfg[temp].priority)
-					{
-						temp = seqIdMap[i];
-					}
-
-				}
-				else
+				if (seqCfg[seqIdMap[i]].priority < seqCfg[temp].priority)
 				{
 					temp = seqIdMap[i];
 				}
-			}
-		}
 
-		if(SPI_SEQUENCE_UNDEFINED != temp)
-		{
-			seqStateMach[hwId] = SPI_SEQUENCE_PROCEDING;
-			/*Sequence Prepare*/
-			Rnt.controllerRnt[hwId].activeSequence = temp;
-			seqRnt[temp].jobIndex = 0;
-			for (i = 0 ; i < seqCfg[temp].jobCount ; i++)
+			}
+			else
 			{
-				Rnt.jobRnt[i].status = SPI_JOB_QUEUED;
+				temp = seqIdMap[i];
 			}
-
-
-			retVal = E_OK;
 		}
-		else
+	}
+
+	if(SPI_SEQUENCE_UNDEFINED != temp)
+	{
+		seqStateMach[hwId] = SPI_SEQUENCE_PROCEDING;
+		/*Sequence Prepare*/
+		Rnt.controllerRnt[hwId].activeSequence = temp;
+		seqRnt[temp].jobIndex = 0;
+		for (i = 0 ; i < seqCfg[temp].jobCount ; i++)
 		{
-			/*Return Not Ok*/
+			Rnt.jobRnt[i].status = SPI_JOB_QUEUED;
 		}
-	/*}
+	}
 	else
 	{
-	}*/
-
-	return retVal;
+		/* No find Sequence*/
+	}
 }
 static Std_ReturnType Spi_SeqHandler_EndSeq(Spi_HwUnitIdType hwId)
 {
@@ -128,7 +112,7 @@ void Spi_SequenceHandler_Init(void)
 	Spi_SequenceHandler_RntInit();
 }
 
-Std_ReturnType Spi_SequenceHandler()
+void Spi_SequenceHandler()
 {
 	Std_ReturnType 			retVal	= E_NOT_OK;
 	uint8_t i;
@@ -141,13 +125,14 @@ Std_ReturnType Spi_SequenceHandler()
 	{
 		hwId = hwRnt[i].hwUnitId;
 
-		if(SPI_SEQUENCE_INIT == seqStateMach[hwId])
+		if((SPI_SEQUENCE_INIT == seqStateMach[hwId]) ||
+			(SPI_SEQUENCE_IDLE == seqStateMach[hwId])	)
 		{
 
-			retVal = Spi_SeqHandler_StartSeq(hwId);
+			Spi_SeqHandler_StartSeq(hwId);
 
 		}
-		else if (SPI_SEQUENCE_PROCEDING == seqStateMach[hwId])
+		if (SPI_SEQUENCE_PROCEDING == seqStateMach[hwId])
 		{
 			actSeqId = Rnt.controllerRnt[hwId].activeSequence;
 			actJobId = Rnt.controllerRnt[hwId].activeJobId;
@@ -185,13 +170,16 @@ Std_ReturnType Spi_SequenceHandler()
 						/* Seq is ended*/
 						seqRnt[actSeqId].status = SPI_SEQ_OK;
 						retVal = Spi_SeqHandler_EndSeq(hwId);
-
 					}
+				}
+				else if (SPI_JOB_QUEUED == Rnt.jobRnt[actJobId].status)
+				{
+					retVal = Spi_JobHandler_StartJob(hwId, seqCfg->jobList[seqRnt[actSeqId].jobIndex]);
 				}
 				else
 				{
 					/* Current Job Pending or Queued*/
-					retVal = Spi_JobHandler(hwId);
+					Spi_JobHandler(hwId);
 				}
 			}
 			else
@@ -199,12 +187,7 @@ Std_ReturnType Spi_SequenceHandler()
 				retVal = Spi_JobHandler_StartJob(hwId, seqCfg->jobList[seqRnt[actSeqId].jobIndex]);
 			}
 		}
-		else
-		{
-			retVal = Spi_SeqHandler_StartSeq(hwId);
-		}
 	}
-	return retVal;
 	/*Check if channels */
 }
 

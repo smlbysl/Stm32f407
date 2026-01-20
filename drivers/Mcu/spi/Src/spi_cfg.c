@@ -70,12 +70,31 @@ const Spi_ChannelConfigType ChannelConfigs[SPI_CHANNEL_MAX] =
 		SPI_CH_TX,
 		/* Length*/
 		1
+	},
+	{
+		/* Dir Type */
+		SPI_CH_TX,
+		/* Length*/
+		1
+	}
+	,
+	{
+		/* Dir Type */
+		SPI_CH_TX,
+		/* Length*/
+		1
 	}
 };
 
-const Spi_ChannelIdType ChannelList [SPI_CHANNEL_MAX] =
+const Spi_ChannelIdType ChannelList1 [1] =
 {
-		SPI_CHANNEL_1
+		SPI_CHANNEL_1,
+};
+
+const Spi_ChannelIdType ChannelList2 [2] =
+{
+		SPI_CHANNEL_2,
+		SPI_CHANNEL_3
 };
 
 
@@ -109,15 +128,30 @@ const Spi_JobConfigType JobConfigs [] =
 		/*Transfer Type */
 		SPI_TRANSFER_INTERRUPT,
 		/* Channel Lists */
-		ChannelList,
+		ChannelList1,
 		/* Channel Number */
-		SPI_EXDEVID_MAX
+		1
+	},
+	{
+		/* ID */
+		SPI_JOB_2,
+		/* Hw Unit ID*/
+		SPI_SPI1,
+		/* External Device ID*/
+		SPI_SENSOR,
+		/*Transfer Type */
+		SPI_TRANSFER_INTERRUPT,
+		/* Channel Lists */
+		ChannelList2,
+		/* Channel Number */
+		2
 	}
 };
 
 const Spi_JobIdType joblist [SPI_JOB_MAX] =
 {
-		SPI_JOB_1
+		SPI_JOB_1,
+		SPI_JOB_2
 };
 
 /* ---------------------------------------------------------------- */
@@ -126,7 +160,7 @@ Spi_SequenceConfigType seqConfigs [SPI_SEQUENCE_MAX] =
 {
 	{
 		.hwUnitID 	= SPI_SPI1,
-		.jobCount 	= 1,
+		.jobCount 	= 2,
 		.priority 	= 0,
 		.sequenceId = SPI_SEQUENCE_1,
 		.jobList    = joblist

@@ -50,7 +50,6 @@ static void Spi_RntInit(void)
 		ControllerRnt[HwIdMap[i]].activeContStatus	= SPI_UNINIT;
 		ControllerRnt[HwIdMap[i]].activeJobId		= SPI_JOB_UNDEFINED;
 		ControllerRnt[HwIdMap[i]].activeSequence	= SPI_SEQUENCE_UNDEFINED;
-		ControllerRnt[HwIdMap[i]].prevJobId			= SPI_JOB_UNDEFINED;
 	}
 
 }

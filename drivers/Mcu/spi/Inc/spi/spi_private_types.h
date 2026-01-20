@@ -145,6 +145,8 @@ typedef enum {
 typedef enum
 {
 	SPI_CHANNEL_1 = 0,
+	SPI_CHANNEL_2,
+	SPI_CHANNEL_3,
 	SPI_CHANNEL_MAX
 }Spi_ChannelIdType;
 
@@ -171,6 +173,7 @@ typedef enum
 typedef enum
 {
 	SPI_JOB_1 = 0,
+	SPI_JOB_2,
 	SPI_JOB_MAX,
 	SPI_JOB_UNDEFINED
 }Spi_JobIdType;
@@ -311,14 +314,13 @@ typedef struct
 typedef struct
 {
 	Spi_JobResultType 	status;
-	uint8_t				channelIndex;
 }Spi_JobRuntimeType;
 
 typedef struct
 {
-	Spi_ChannelResultType	status;
-    uint16_t 				txIndex;
-    uint16_t 				rxIndex;
+	Spi_ChannelResultType		status;
+    uint16_t 					txIndex;
+    uint16_t 					rxIndex;
     const uint16_t* 			txPtr;   // EB
     uint16_t*       			rxPtr;   // EB
 } Spi_ChannelRuntimeType;
@@ -335,18 +337,10 @@ typedef struct
 	Spi_SequenceIdType			activeSequence;
 	Spi_StatusType 				activeContStatus;
 	Spi_JobIdType     			activeJobId;
-	Spi_JobIdType     			prevJobId;
+	uint8_t						channelIndex;
 	Spi_ChannelIdType			activeChannelId;
 }Spi_ControllerRuntimeType;
 
-/*typedef struct
-{
-	Spi_ControllerRuntimeType	*controllerRnt;
-	Spi_HwUnitRuntimeType		*hwRnt;
-	Spi_JobRuntimeType      	*jobRnt;
-	Spi_ChannelRuntimeType		*channelRnt;
-}Spi_SequenceRuntimeType;
-*/
 typedef struct
 {
 	Spi_SequenceIdType           	sequenceId;
@@ -358,6 +352,7 @@ typedef struct
 typedef struct
 {
 	Spi_StatusType 				activeContStatus;
+	Std_boolean					hwDone;
 	Spi_SequenceRuntimeType		*sequenceRnt;
 	Spi_ControllerRuntimeType	*controllerRnt;
 	Spi_HwUnitRuntimeType		*hwRnt;

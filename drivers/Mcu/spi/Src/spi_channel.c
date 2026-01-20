@@ -56,55 +56,6 @@ void Spi_Channel_Init(void)
 	Spi_Channel_RntInit();
 }
 
-Std_ReturnType Spi_ChannelHandler_StartAsynch(Spi_HwUnitIdType hwId, Spi_ChannelIdType chId)
-{
-	Std_ReturnType 			retVal	= E_NOT_OK;
-	Spi_Hw_RegType			*hwBase	= CfgPtr->controllerConfig[hwId].base;
-	Spi_ChannelRuntimeType	*chRt	= &channelRnt[chId];
-
-	if ((SPI_IDLE == Rnt.controllerRnt[hwId].activeContStatus) &&
-		(STD_FALSE == SPI_LL_IsBusy(hwBase)))
-	{
-		Rnt.controllerRnt[hwId].activeContStatus 	= SPI_BUSY;
-		Rnt.controllerRnt[hwId].activeChannelId 	= chId;
-
-		chRt->txIndex = 0;
-		chRt->rxIndex = 0;
-
-		chRt->txPtr = &Spi_IB_Tx[chId][0];
-		chRt->rxPtr = &Spi_IB_Rx[chId][0];
-
-		SPI_LL_PeripDis(hwBase);
-
-		switch (CfgPtr->channelConfig[chId].dir)
-		{
-
-		case SPI_CH_TX:
-
-			SPI_LL_TxEmtyIntEn(hwBase);
-			SPI_LL_PeripEn(hwBase);
-			break;
-
-		case SPI_CH_RX:
-
-			SPI_LL_RxNotEmtyIntEn(hwBase);
-			SPI_LL_PeripEn(hwBase);
-	    	break;
-
-		case SPI_CH_TXRX:
-
-			SPI_LL_TxEmtyIntEn(hwBase);
-			SPI_LL_RxNotEmtyIntEn(hwBase);
-			SPI_LL_PeripEn(hwBase);
-			break;
-
-		default:
-		}
-		retVal = E_OK;
-	}
-	return retVal;
-}
-
 
 Std_ReturnType Spi_Channel_WriteTxIBBuffer(Spi_ChannelIdType chId, const uint16_t *DataBuffer)
 {
@@ -130,6 +81,7 @@ Std_ReturnType Spi_Channel_WriteTxIBBuffer(Spi_ChannelIdType chId, const uint16_
 			Spi_IB_Tx[chId][i] = DataBuffer[i];
 		}
 		retVal = E_OK;
+		channelRnt[chId].status = SPI_CHANNEL_PENDING;
 	}
 	else
 	{
@@ -175,6 +127,64 @@ Std_ReturnType Spi_Channel_ReadRxIBBuffer(Spi_ChannelIdType chId, uint16_t *Data
 	return retVal;
 }
 
+
+Std_ReturnType Spi_ChannelHandler_StartAsynch(Spi_HwUnitIdType hwId, Spi_ChannelIdType chId)
+{
+	Std_ReturnType 			retVal	= E_NOT_OK;
+	Spi_Hw_RegType			*hwBase	= CfgPtr->controllerConfig[hwId].base;
+	Spi_ChannelRuntimeType	*chRt	= &channelRnt[chId];
+
+	if (STD_FALSE == SPI_LL_IsBusy(hwBase))
+	{
+		Rnt.controllerRnt[hwId].activeContStatus 	= SPI_BUSY;
+		Rnt.controllerRnt[hwId].activeChannelId 	= chId;
+
+		chRt->txIndex = 0;
+		chRt->rxIndex = 0;
+
+
+		SPI_LL_PeripDis(hwBase);
+
+		switch (CfgPtr->channelConfig[chId].dir)
+		{
+
+		case SPI_CH_TX:
+
+			SPI_LL_TxEmtyIntEn(hwBase);
+			SPI_LL_PeripEn(hwBase);
+			break;
+
+		case SPI_CH_RX:
+
+			SPI_LL_RxNotEmtyIntEn(hwBase);
+			SPI_LL_PeripEn(hwBase);
+	    	break;
+
+		case SPI_CH_TXRX:
+
+			SPI_LL_TxEmtyIntEn(hwBase);
+			SPI_LL_RxNotEmtyIntEn(hwBase);
+			SPI_LL_PeripEn(hwBase);
+			break;
+
+		default:
+		}
+		retVal = E_OK;
+	}
+	return retVal;
+}
+
+Std_ReturnType Spi_ChannelHandler_EndAsynch(Spi_HwUnitIdType hwId)
+{
+	Std_ReturnType 			retVal	= E_NOT_OK;
+	Spi_Hw_RegType			*hwBase	= CfgPtr->controllerConfig[hwId].base;
+
+	if (STD_FALSE == SPI_LL_IsBusy(hwBase))
+	{
+		Rnt.controllerRnt[hwId].activeContStatus = SPI_IDLE;
+	}
+	return retVal;
+}
 
 
 void Spi_Channel_Callback(Spi_HwUnitIdType hwID)
@@ -289,11 +299,10 @@ void Spi_Channel_Callback(Spi_HwUnitIdType hwID)
 		(rxDone) &&
 	    (STD_FALSE == SPI_LL_IsBusy(hwBase)))   // BSY == 0
 	{
+		Rnt.hwDone	= STD_TRUE;
+	    //Rnt.channelRnt[acChId].status = SPI_CHANNEL_OK;
 		SPI_LL_PeripDis(hwBase);
 		SPI_LL_TxEmtyIntDis(hwBase);
 		SPI_LL_RxNotEmtyIntDis(hwBase);
-	    Rnt.channelRnt[hwID].status = SPI_CHANNEL_OK;
-	    Rnt.controllerRnt[hwID].activeContStatus = SPI_IDLE;
 	}
-
 }

@@ -115,6 +115,40 @@ static const Gpio_PinConfig_t Gpio_PinConfigs[] =
 		GPIO_OSPEEDR_FAST,
 		/*Gpio_Pin_AFR*/
 		0
+	},
+	/*Pin Config : 5*/
+	{
+		/*GPIO PortID*/
+		GPIO_PA_ID,
+		/*Gpio_PinNumber*/
+		GPIO_PIN_NO_7,
+		/*Gpio_Pin_Mode*/
+		GPIO_MODER_AF,
+		/*GPOI_Pin_OPtype*/
+		GPIO_OTYPER_PP,
+		/*Gpio_Pin_PUPD*/
+		GPIO_PUPDR_NOPUPD,
+		/*Gpio_Pin_OSPEED*/
+		GPIO_OSPEEDR_FAST,
+		/*Gpio_Pin_AFR*/
+		GPIO_AF5
+	},
+	/*Pin Config : 6*/
+	{
+		/*GPIO PortID*/
+		GPIO_PA_ID,
+		/*Gpio_PinNumber*/
+		GPIO_PIN_NO_5,
+		/*Gpio_Pin_Mode*/
+		GPIO_MODER_AF,
+		/*GPOI_Pin_OPtype*/
+		GPIO_OTYPER_PP,
+		/*Gpio_Pin_PUPD*/
+		GPIO_PUPDR_NOPUPD,
+		/*Gpio_Pin_OSPEED*/
+		GPIO_OSPEEDR_FAST,
+		/*Gpio_Pin_AFR*/
+		GPIO_AF5
 	}
 
 };

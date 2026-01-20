@@ -58,16 +58,17 @@ void Spi_HwUnit_Init(const Spi_ConfigType* ConfigPtr);
 Std_ReturnType Spi_Channel_ReadRxIBBuffer(Spi_ChannelIdType chId, uint16_t *DataBuffer);
 Std_ReturnType Spi_Channel_WriteTxIBBuffer(Spi_ChannelIdType chId, const uint16_t *DataBuffer);
 Std_ReturnType Spi_ChannelHandler_StartAsynch(Spi_HwUnitIdType hwId, Spi_ChannelIdType chId);
+Std_ReturnType Spi_ChannelHandler_EndAsynch(Spi_HwUnitIdType hwId);
 void Spi_Channel_Init(void);
 void Spi_Channel_Callback(Spi_HwUnitIdType hwID);
 /* --------------------------------------------------------------------------------------------------------- */
 /* -------------------------------------- Job Unit  -------------------------------------------------------- */
-Std_ReturnType Spi_JobHandler(Spi_HwUnitIdType hwId);
+void Spi_JobHandler(Spi_HwUnitIdType hwId);
 Std_ReturnType Spi_JobHandler_StartJob(Spi_HwUnitIdType hwId, Spi_JobIdType requestJobId);
 void Spi_JobHandler_Init(void);
 /* --------------------------------------------------------------------------------------------------------- */
 /* -------------------------------------- Seq Unit  -------------------------------------------------------- */
-Std_ReturnType Spi_SequenceHandler();
+void Spi_SequenceHandler();
 Std_ReturnType Spi_SeqHandler_AsychSeqTrigger(Spi_SequenceIdType seqId);
 void Spi_SequenceHandler_Init(void);
 
