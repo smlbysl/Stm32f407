@@ -121,12 +121,12 @@ void Spi_JobHandler(Spi_HwUnitIdType hwId)
 		{
 			if(SPI_TRANSFER_INTERRUPT == jobCfg->transferMode)
 			{
-				retVal = Spi_ChannelHandler_StartAsynch(hwId,  jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex]);
+				retVal = Spi_ChannelHandler_StartAsynch(hwId,  jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex + 1]);
 			}
 			else
 			{
 					/*Pooling*/
-				retVal = Spi_ChannelHandler_StartPooling(hwId, jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex]);
+				retVal = Spi_ChannelHandler_StartPooling(hwId, jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex + 1]);
 			}
 
 			if(E_OK == retVal)
@@ -189,7 +189,6 @@ Std_ReturnType Spi_JobHandler_StartJob(Spi_HwUnitIdType hwId, Spi_JobIdType requ
 			{
 					/*Pooling*/
 				retVal = Spi_ChannelHandler_StartPooling(hwId, jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex]);
-
 			}
 		}
 	}

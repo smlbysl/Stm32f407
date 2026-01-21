@@ -43,7 +43,7 @@
 void delayFunc (void);
 void delayFunc (void)
 {
-	for(uint32_t i = 0 ; i<50; i++);
+	for(uint32_t i = 0 ; i<5; i++);
 }
 
 
