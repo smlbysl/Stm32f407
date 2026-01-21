@@ -9,18 +9,15 @@
 /* ========================================================================================================= */
 /* -------------------------------------- Include  --------------------------------------------------------- */
 #include "spi.h"
-#include "spi_ll.h"
-#include <stddef.h>
-#include "stdint.h"
 #include "spi_private.h"
+#include "spi_hwunit.h"
+#include "spi_sequence.h"
 /* ========================================================================================================= */
 /* -------------------------------------- Macro Definition  ------------------------------------------------ */
 
 /* ========================================================================================================= */
 /* -------------------------------------- Global Variable Definition  -------------------------------------- */
 const Spi_ConfigType	* CfgPtr = NULL;
-
-
 /* ========================================================================================================= */
 /* -------------------------------------- Local Variable Definition  --------------------------------------- */
 Spi_ControllerRuntimeType 	ControllerRnt[SPI_HWID_MAX];
@@ -32,7 +29,6 @@ Spi_DrvierRuntimeType 		Rnt =
 		.channelRnt		= channelRnt,
 		.hwRnt			= hwRnt
 };
-
 /* ========================================================================================================= */
 /* -------------------------------------- Static Function Definitions -------------------------------------- */
 static void Spi_RntInit(void);
@@ -88,7 +84,6 @@ void Spi_Init(const Spi_ConfigType* ConfigPtr)
 
 			Spi_HwUnit_Init(ConfigPtr);
 
-
 			for(contId = 0 ; contId < SPI_HWID_MAX ; contId++)
 			{
 				if(SPI_HW_IDLE == Rnt.hwRnt[contId].hwStatus)
@@ -132,16 +127,78 @@ void Spi_Main(void)
 }
 
 
-Std_ReturnType Spi_Asynch_SeqTrigger(Spi_SequenceIdType seqId)
+Std_ReturnType Spi_AsyncTransmit(Spi_SequenceIdType seqId)
 {
-	Spi_SeqHandler_AsychSeqTrigger(seqId);
-	return E_OK;
+	return Spi_SeqHandler_AsychSeqTrigger(seqId);
+
 }
 
-Std_ReturnType Spi_WriteTxIBBuffer(Spi_ChannelIdType chId, const uint16_t *DataBuffer)
+Std_ReturnType Spi_WriteIB(Spi_ChannelIdType chId, const uint16_t *DataBuffer)
 {
 	return Spi_Channel_WriteTxIBBuffer(chId, DataBuffer);
 }
+
+Std_ReturnType Spi_ReadIB(Spi_ChannelIdType chId, const uint16_t *DataBuffer)
+{
+	//return Spi_Channel_WriteTxIBBuffer(chId, DataBuffer);
+	return 1;
+}
+/*
+Std_ReturnType Spi_SetupEB ( Spi_ChannelIdType Channel,
+							const uint16_t* SrcDataBufferPtr,
+							uint16_t* DesDataBufferPtr,
+							uint8_t Length )
+{
+
+return 1;
+}
+
+Spi_StatusType Spi_GetStatus ( void )
+{
+
+	return 1;
+}
+
+Spi_JobResultType Spi_GetJobResult ( Spi_JobType Job )
+{
+
+	return 1;
+}
+
+Spi_SeqResultType Spi_GetSequenceResult (Spi_SequenceType Sequence )
+{
+	return 1;
+}
+
+void Spi_GetVersionInfo ( Std_VersionInfoType* versioninfo )
+{
+
+}*/
+Std_ReturnType Spi_SyncTransmit (Spi_SequenceIdType Sequence )
+{
+	return Spi_SeqHandler_SyncTransmitTrigger(Sequence);
+}
+/*
+Spi_StatusType Spi_GetHWUnitStatus ( Spi_HWUnitType HWUnit )
+{
+	return 1;
+}
+void Spi_Cancel ( Spi_SequenceType Sequence )
+{
+
+}
+Std_ReturnType Spi_SetAsyncMode ( Spi_AsyncModeType Mode )
+{
+
+}
+
+*/
+
+
+
+
+
+
 
 
 

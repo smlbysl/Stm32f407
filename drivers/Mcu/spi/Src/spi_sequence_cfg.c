@@ -1,16 +1,15 @@
 /*
- * spi_cfg.c
+ * spi_sequence_cfg.c
  *
- *  Created on: Jan 9, 2026
+ *  Created on: Jan 20, 2026
  *      Author: smlby
  */
 
+
+
 /* ========================================================================================================= */
 /* -------------------------------------- Include  --------------------------------------------------------- */
-#include <spi_hwunit_cfg.h>
-#include "spi_cfg.h"
 #include "spi_sequence_cfg.h"
-#include "spi_channel_cfg.h"
 #include "spi_job_cfg.h"
 /* ========================================================================================================= */
 /* -------------------------------------- Static Function Definitions -------------------------------------- */
@@ -19,14 +18,16 @@
 /* ========================================================================================================= */
 /* -------------------------------------- Global Variable Definition  -------------------------------------- */
 /* ---------------------------------------------------------------- */
-/* ----------------- Spi Configs ---------------------------------- */
-const Spi_ConfigType SpiConfig =
+/* ----------------- Seq Configs ---------------------------------- */
+const Spi_SequenceConfigType seqConfigs [SPI_SEQUENCE_MAX] =
 {
-    .controllerConfig     = ControllerConfigs,
-    .externalDeviceConfig = ExDevConfigs,
-    .jobConfig            = JobConfigs,
-    .channelConfig        = ChannelConfigs,
-	.seqConfig			  = seqConfigs
+	{
+		.hwUnitID 	= SPI_SPI1,
+		.jobCount 	= 2,
+		.priority 	= 0,
+		.sequenceId = SPI_SEQUENCE_1,
+		.jobList    = joblist1
+	}
 };
 
 /* ========================================================================================================= */

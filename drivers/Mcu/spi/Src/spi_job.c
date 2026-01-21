@@ -10,6 +10,9 @@
 /* ========================================================================================================= */
 /* -------------------------------------- Include  --------------------------------------------------------- */
 #include "spi_private.h"
+#include "spi_job.h"
+#include "gpio.h"
+#include "gpio_cfg.h"
 /* ========================================================================================================= */
 /* -------------------------------------- Macro Definition  ------------------------------------------------ */
 
@@ -21,7 +24,8 @@ Spi_JobRuntimeType jobRnt[SPI_JOB_MAX];
 /* -------------------------------------- Local Variable Definition  --------------------------------------- */
 /* ========================================================================================================= */
 /* -------------------------------------- Static Function Definitions -------------------------------------- */
-
+static void Spi_JobHandler_Assert(Spi_JobIdType	activeJobId);
+static void Spi_JobHandler_Deassert(Spi_JobIdType	activeJobId);
 static void Spi_JobHandler_EndJob(Spi_HwUnitIdType hwId);
 /* ========================================================================================================= */
 /* -------------------------------------- Inline Definition  ----------------------------------------------- */
@@ -36,12 +40,47 @@ static void Spi_JobHandler_EndJob(Spi_HwUnitIdType hwId)
 	Spi_JobIdType		activeJobId		= Rnt.controllerRnt[hwId].activeJobId;
 	const Spi_JobConfigType		*jobCfg	= &CfgPtr->jobConfig[activeJobId];
 
-	//GPIO Release
+	Spi_JobHandler_Deassert(activeJobId);
 
 	Spi_ChannelHandler_EndAsynch(hwId);
 	for(i = 0 ; i < jobCfg->channelCount ; i++)
 	{
 		Rnt.channelRnt[jobCfg->channelList[i]].status = SPI_CHANNEL_OK;
+	}
+}
+
+static void Spi_JobHandler_Assert(Spi_JobIdType	activeJobId)
+{
+	const Spi_JobConfigType		*jobCfg	= &CfgPtr->jobConfig[activeJobId];
+
+	if(STD_TRUE == jobCfg->cs.isCS)
+	{
+		if(SPI_ACTIVE_LOW == jobCfg->cs.enableLine)
+		{
+			GPIO_WriteToOutputPin(jobCfg->cs.gpioChnl,  GPIO_PIN_LEVEL_LOW);
+		}
+		else
+		{
+			GPIO_WriteToOutputPin(jobCfg->cs.gpioChnl,  GPIO_PIN_LEVEL_HIGH);
+		}
+	}
+}
+
+
+static void Spi_JobHandler_Deassert(Spi_JobIdType	activeJobId)
+{
+	const Spi_JobConfigType		*jobCfg	= &CfgPtr->jobConfig[activeJobId];
+
+	if(STD_TRUE == jobCfg->cs.isCS)
+	{
+		if(SPI_ACTIVE_LOW == jobCfg->cs.enableLine)
+		{
+			GPIO_WriteToOutputPin(jobCfg->cs.gpioChnl,  GPIO_PIN_LEVEL_HIGH);
+		}
+		else
+		{
+			GPIO_WriteToOutputPin(jobCfg->cs.gpioChnl,  GPIO_PIN_LEVEL_LOW);
+		}
 	}
 }
 /* ========================================================================================================= */
@@ -53,6 +92,7 @@ void Spi_JobHandler_Init(void)
 	for(i = 0 ; i < SPI_JOB_MAX ; i++)
 	{
 		jobRnt[i].status		= SPI_SEQ_OK;
+		Spi_JobHandler_Deassert(jobIdMap[i]);
 	}
 }
 
@@ -62,13 +102,32 @@ void Spi_JobHandler(Spi_HwUnitIdType hwId)
 	Spi_JobIdType			jobId	= Rnt.controllerRnt[hwId].activeJobId;
 	const Spi_JobConfigType	*jobCfg	= &CfgPtr->jobConfig[jobId];
 
+
+	if(SPI_TRANSFER_INTERRUPT == jobCfg->transferMode)
+	{
+		/*Do Nothing*/
+	}
+	else
+	{
+			/*Pooling*/
+		Spi_Channel_Callback(hwId);
+	}
+
 	if(Rnt.hwDone == STD_TRUE)
 	{
 		Rnt.hwDone = STD_FALSE;
 
 		if(jobCfg->channelCount > Rnt.controllerRnt[hwId].channelIndex + 1)
 		{
-			retVal = Spi_ChannelHandler_StartAsynch(hwId, jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex]);
+			if(SPI_TRANSFER_INTERRUPT == jobCfg->transferMode)
+			{
+				retVal = Spi_ChannelHandler_StartAsynch(hwId,  jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex]);
+			}
+			else
+			{
+					/*Pooling*/
+				retVal = Spi_ChannelHandler_StartPooling(hwId, jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex]);
+			}
 
 			if(E_OK == retVal)
 			{
@@ -119,7 +178,19 @@ Std_ReturnType Spi_JobHandler_StartJob(Spi_HwUnitIdType hwId, Spi_JobIdType requ
 					return E_NOT_OK;
 				}
 			}
-			retVal = Spi_ChannelHandler_StartAsynch(hwId,  jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex]);
+
+			Spi_JobHandler_Assert(requestJobId);
+
+			if(SPI_TRANSFER_INTERRUPT == jobCfg->transferMode)
+			{
+				retVal = Spi_ChannelHandler_StartAsynch(hwId,  jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex]);
+			}
+			else
+			{
+					/*Pooling*/
+				retVal = Spi_ChannelHandler_StartPooling(hwId, jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex]);
+
+			}
 		}
 	}
 	else

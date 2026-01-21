@@ -52,6 +52,8 @@ void delayFunc (void)
 int main(void)
 {
 
+	uint8_t retval = 0xFF;
+
 	uint16_t array[3] = {185 , 170, 15};
 
 	GPIOA_PCLK_EN();
@@ -64,20 +66,19 @@ int main(void)
 
 	Spi_Init(&SpiConfig);
 
-	retval = Spi_WriteTxIBBuffer(SPI_CHANNEL_1,array);
-	retval = Spi_WriteTxIBBuffer(SPI_CHANNEL_2,&array[1]);
-	retval = Spi_WriteTxIBBuffer(SPI_CHANNEL_3,&array[2]);
-	retval = Spi_Asynch_SeqTrigger(SPI_SEQUENCE_1);
+	retval = Spi_WriteIB(SPI_CHANNEL_1,array);
+	retval = Spi_WriteIB(SPI_CHANNEL_2,&array[1]);
+	retval = Spi_WriteIB(SPI_CHANNEL_3,&array[2]);
+	retval = Spi_AsyncTransmit(SPI_SEQUENCE_1);
 
 	while(1)
 	{
 		Spi_Main();
 		delayFunc();
-		retval = Spi_WriteTxIBBuffer(SPI_CHANNEL_1,array);
-		retval = Spi_WriteTxIBBuffer(SPI_CHANNEL_2,&array[1]);
-		retval = Spi_WriteTxIBBuffer(SPI_CHANNEL_3,&array[2]);
-		retval = Spi_Asynch_SeqTrigger(SPI_SEQUENCE_1);
-
+		retval = Spi_WriteIB(SPI_CHANNEL_1,array);
+		retval = Spi_WriteIB(SPI_CHANNEL_2,&array[1]);
+		retval = Spi_WriteIB(SPI_CHANNEL_3,&array[2]);
+		retval = Spi_SyncTransmit(SPI_SEQUENCE_1);
 	}
 
     /* Loop forever */

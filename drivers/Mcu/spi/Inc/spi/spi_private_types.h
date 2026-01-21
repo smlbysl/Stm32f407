@@ -10,22 +10,14 @@
 
 /* ========================================================================================================= */
 /* -------------------------------------- Include  --------------------------------------------------------- */
-
-
 #include <std_types.h>
 #include "spi_hw.h"
 #include "spi_types.h"
-
-
+#include "gpio_types.h"
 /* ========================================================================================================= */
 /* -------------------------------------- Macro Definitions ------------------------------------------------ */
-
-
 /* ========================================================================================================= */
 /* -------------------------------------- Type Definitions  ------------------------------------------------ */
-
-//typedef uint8_t Spi_BitType;
-
 /* --------------------------------------------------------------------------------------------------------- */
 /* -------------------------------------- Enumeration Definitions  ----------------------------------------- */
 /* ---------------------------------------------------------------- */
@@ -89,6 +81,11 @@ typedef enum
 	SPI_BOUNDRATE_MAX
 }Spi_BoundRateType;
 
+typedef enum
+{
+	SPI_ACTIVE_LOW = 0,
+	SPI_ACTIVE_HIGH
+}Spi_EnableLineType;
 /* ---------------------------------------------------------------- */
 /* ----------------- Frame Definitions ---------------------------- */
 typedef enum
@@ -226,6 +223,8 @@ typedef struct
 
 /* ---------------------------------------------------------------- */
 /* ----------------- HwUnit Definitions --------------------------- */
+
+
 typedef struct
 {
 	Spi_HwUnitIdType   		id;
@@ -239,11 +238,14 @@ typedef struct
 
 /* ---------------------------------------------------------------- */
 /* ----------------- ExDevice Definitions ------------------------- */
+
+
+
 typedef struct
 {
 	Spi_ExDevIdType      			id;
 	const Spi_ControllerConfigType 	*controller;
-	Spi_FrameConfigType        		*frame;
+	const Spi_FrameConfigType       *frame;
 	Spi_BoundRateType      			targetBaudrate;
 	/*uint32_t               		csSetupTime;
 	uint32_t               		csHoldTime;
@@ -264,6 +266,12 @@ typedef struct
 
 /* ---------------------------------------------------------------- */
 /* ----------------- Job Definitions ------------------------------ */
+typedef struct
+{
+	Std_boolean			isCS;
+	Gpio_ChannelRefType gpioChnl;
+    Spi_EnableLineType  enableLine;
+} Spi_CsConfigType;
 
 typedef struct
 {
@@ -273,6 +281,7 @@ typedef struct
     Spi_TransferModeType   			transferMode;
     const Spi_ChannelIdType* 		channelList;
     uint8_t            				channelCount;
+	Spi_CsConfigType				cs;
 } Spi_JobConfigType;
 
 /* ---------------------------------------------------------------- */

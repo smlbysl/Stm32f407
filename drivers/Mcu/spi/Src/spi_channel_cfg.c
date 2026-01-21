@@ -1,17 +1,13 @@
 /*
- * spi_cfg.c
+ * spi_channel_cfg.c
  *
- *  Created on: Jan 9, 2026
+ *  Created on: Jan 20, 2026
  *      Author: smlby
  */
 
 /* ========================================================================================================= */
 /* -------------------------------------- Include  --------------------------------------------------------- */
-#include <spi_hwunit_cfg.h>
-#include "spi_cfg.h"
-#include "spi_sequence_cfg.h"
 #include "spi_channel_cfg.h"
-#include "spi_job_cfg.h"
 /* ========================================================================================================= */
 /* -------------------------------------- Static Function Definitions -------------------------------------- */
 /* ========================================================================================================= */
@@ -19,14 +15,38 @@
 /* ========================================================================================================= */
 /* -------------------------------------- Global Variable Definition  -------------------------------------- */
 /* ---------------------------------------------------------------- */
-/* ----------------- Spi Configs ---------------------------------- */
-const Spi_ConfigType SpiConfig =
+/* ----------------- Channel Configs ------------------------------ */
+const Spi_ChannelConfigType ChannelConfigs[SPI_CHANNEL_MAX] =
 {
-    .controllerConfig     = ControllerConfigs,
-    .externalDeviceConfig = ExDevConfigs,
-    .jobConfig            = JobConfigs,
-    .channelConfig        = ChannelConfigs,
-	.seqConfig			  = seqConfigs
+	{
+		/* Dir Type */
+		SPI_CH_TX,
+		/* Length*/
+		1
+	},
+	{
+		/* Dir Type */
+		SPI_CH_TX,
+		/* Length*/
+		1
+	},
+	{
+		/* Dir Type */
+		SPI_CH_TX,
+		/* Length*/
+		1
+	}
+};
+
+const Spi_ChannelIdType ChannelList1 [SPI_JOB1_CHANNEL_MAX] =
+{
+		SPI_CHANNEL_1,
+};
+
+const Spi_ChannelIdType ChannelList2 [SPI_JOB2_CHANNEL_MAX] =
+{
+		SPI_CHANNEL_2,
+		SPI_CHANNEL_3
 };
 
 /* ========================================================================================================= */

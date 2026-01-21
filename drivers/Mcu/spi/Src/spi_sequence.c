@@ -11,6 +11,7 @@
 /* ========================================================================================================= */
 /* -------------------------------------- Include  --------------------------------------------------------- */
 #include "spi_private.h"
+#include "spi_sequence.h"
 /* ========================================================================================================= */
 /* -------------------------------------- Macro Definition  ------------------------------------------------ */
 /* ========================================================================================================= */
@@ -210,6 +211,43 @@ Std_ReturnType Spi_SeqHandler_AsychSeqTrigger(Spi_SequenceIdType seqId)
 	{
 		/* Do Nothing */
 	}
+	return retVal;
+}
+
+Std_ReturnType Spi_SeqHandler_SyncTransmitTrigger(Spi_SequenceIdType Sequence)
+{
+	Std_ReturnType 	retVal = E_NOT_OK;
+	uint8_t i;
+	const Spi_SequenceConfigType *seqCfg = &CfgPtr->seqConfig[Sequence];
+	Spi_HwUnitIdType  	hwId = seqCfg->hwUnitID;
+
+	seqCfg = CfgPtr->seqConfig;
+
+
+	if((SPI_IDLE == Rnt.controllerRnt[hwId].activeContStatus) &&
+			(SPI_SEQUENCE_IDLE == seqStateMach[hwId]))
+	{
+		seqStateMach[hwId] = SPI_SEQUENCE_PROCEDING;
+		/*Sequence Prepare*/
+		Rnt.controllerRnt[hwId].activeSequence = Sequence;
+		seqRnt[Sequence].jobIndex = 0;
+		for (i = 0 ; i < seqCfg[Sequence].jobCount ; i++)
+		{
+			Rnt.jobRnt[i].status = SPI_JOB_QUEUED;
+		}
+
+		while((SPI_SEQUENCE_IDLE != seqStateMach[hwId]))
+		{
+			Spi_SequenceHandler();
+		}
+
+		retVal = E_OK;
+	}
+	else
+	{
+
+	}
+
 	return retVal;
 }
 

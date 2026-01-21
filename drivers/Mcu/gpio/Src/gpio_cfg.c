@@ -149,6 +149,23 @@ static const Gpio_PinConfig_t Gpio_PinConfigs[] =
 		GPIO_OSPEEDR_FAST,
 		/*Gpio_Pin_AFR*/
 		GPIO_AF5
+	},
+	/*Pin Config : 7*/
+	{
+		/*GPIO PortID*/
+		GPIO_PA_ID,
+		/*Gpio_PinNumber*/
+		GPIO_PIN_NO_3,
+		/*Gpio_Pin_Mode*/
+		GPIO_MODER_GPO,
+		/*GPOI_Pin_OPtype*/
+		GPIO_OTYPER_PP,
+		/*Gpio_Pin_PUPD*/
+		GPIO_PUPDR_NOPUPD,
+		/*Gpio_Pin_OSPEED*/
+		GPIO_OSPEEDR_FAST,
+		/*Gpio_Pin_AFR*/
+		0
 	}
 
 };
@@ -172,7 +189,9 @@ const Gpio_ChannelConfigType Gpio_ChannelConfig[] =
 	 /* Channel 3 */
 	{ GPIO_PD_ID, GPIO_PIN_NO_15 },
     /* Channel 4 */
-    { GPIO_PA_ID, GPIO_PIN_NO_0 }
+    { GPIO_PA_ID, GPIO_PIN_NO_0 },
+    /* Channel 5 */
+    { GPIO_PA_ID, GPIO_PIN_NO_3 }
 };
 
 

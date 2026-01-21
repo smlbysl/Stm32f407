@@ -1,37 +1,26 @@
 /*
- * spi.h
+ * spi_sequence_cfg.h
  *
- *  Created on: Jan 7, 2026
+ *  Created on: Jan 20, 2026
  *      Author: smlby
  */
 
-#ifndef MCU_SPI_INC_SPI_SPI_H_
-#define MCU_SPI_INC_SPI_SPI_H_
-
-#include "spi_private_types.h"
-
-
-
+#ifndef MCU_SPI_INC_SPI_SPI_SEQUENCE_CFG_H_
+#define MCU_SPI_INC_SPI_SPI_SEQUENCE_CFG_H_
 /* ========================================================================================================= */
 /* -------------------------------------- Include  --------------------------------------------------------- */
+#include "spi_private_types.h"
 /* ========================================================================================================= */
 /* -------------------------------------- Type Definitions  ------------------------------------------------ */
-/* ========================================================================================================= */
-/* -------------------------------------- Global Variables Definition -------------------------------------- */
+
 /* ========================================================================================================= */
 /* -------------------------------------- Macro Definitions ------------------------------------------------ */
 /* ========================================================================================================= */
+/* -------------------------------------- Global Variables Definition -------------------------------------- */
+extern const Spi_SequenceConfigType seqConfigs [SPI_SEQUENCE_MAX];
+/* ========================================================================================================= */
 /* -------------------------------------- Peripheral Definitions ------------------------------------------- */
-void Spi_Init(const Spi_ConfigType* ConfigPtr);
-void Spi_Main(void);
-Std_ReturnType Spi_AsyncTransmit(Spi_SequenceIdType seqId);
-Std_ReturnType Spi_WriteIB(Spi_ChannelIdType chId, const uint16_t *DataBuffer);
-Std_ReturnType Spi_ReadIB(Spi_ChannelIdType chId, const uint16_t *DataBuffer);
-Std_ReturnType Spi_SetupEB( Spi_ChannelIdType Channel,
-							const uint16_t* SrcDataBufferPtr,
-							uint16_t* DesDataBufferPtr,
-							uint8_t Length );
-Std_ReturnType Spi_SyncTransmit (Spi_SequenceIdType Sequence);
 
-#endif /* MCU_SPI_INC_SPI_SPI_H_ */
 
+
+#endif /* MCU_SPI_INC_SPI_SPI_SEQUENCE_CFG_H_ */

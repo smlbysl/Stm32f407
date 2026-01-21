@@ -1,33 +1,31 @@
 /*
- * spi_private.h
+ * spi_job.h
  *
- *  Created on: Jan 13, 2026
+ *  Created on: Jan 20, 2026
  *      Author: smlby
  */
 
-#ifndef MCU_SPI_INC_SPI_SPI_PRIVATE_H_
-#define MCU_SPI_INC_SPI_SPI_PRIVATE_H_
-
+#ifndef MCU_SPI_INC_SPI_SPI_JOB_H_
+#define MCU_SPI_INC_SPI_SPI_JOB_H_
 
 /* ========================================================================================================= */
 /* -------------------------------------- Include  --------------------------------------------------------- */
-#include <std_types.h>
 #include "spi_private_types.h"
-#include "spi_cfg.h"
-#include "spi_hw.h"
-#include "spi_ll.h"
-#include <stddef.h>
+#include "spi_channel.h"
+#include "spi_hwunit.h"
 /* ========================================================================================================= */
 /* -------------------------------------- Macro Definitions ------------------------------------------------ */
 /* ========================================================================================================= */
 /* -------------------------------------- Type Definitions  ------------------------------------------------ */
 /* ========================================================================================================= */
 /* -------------------------------------- Extern Definitions  ---------------------------------------------- */
-extern const Spi_ConfigType	*CfgPtr;
-extern const Spi_HwUnitIdType HwIdMap[SPI_HWID_MAX];
-extern const Spi_JobIdType jobIdMap[SPI_JOB_MAX];
-extern Spi_DrvierRuntimeType Rnt;
+extern Spi_JobRuntimeType 			jobRnt[SPI_JOB_MAX];
 /* ========================================================================================================= */
 /* -------------------------------------- API Definitions  ------------------------------------------------- */
+void Spi_JobHandler_Init(void);
 
-#endif /* MCU_SPI_INC_SPI_SPI_PRIVATE_H_ */
+void Spi_JobHandler(Spi_HwUnitIdType hwId);
+Std_ReturnType Spi_JobHandler_StartJob(Spi_HwUnitIdType hwId, Spi_JobIdType requestJobId);
+
+
+#endif /* MCU_SPI_INC_SPI_SPI_JOB_H_ */

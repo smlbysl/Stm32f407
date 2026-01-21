@@ -10,6 +10,7 @@
 /* ========================================================================================================= */
 /* -------------------------------------- Include  --------------------------------------------------------- */
 #include "spi_private.h"
+#include "spi_channel.h"
 /* ========================================================================================================= */
 /* -------------------------------------- Macro Definition  ------------------------------------------------ */
 #define SPI_DUMMY_BUFFER_16			((uint16_t)0xFFFF)
@@ -23,7 +24,6 @@ static uint16_t Spi_IB_Tx[SPI_CHANNEL_MAX][SPI_CHANNELLENGTH_MAX];
 static uint16_t Spi_IB_Rx[SPI_CHANNEL_MAX][SPI_CHANNELLENGTH_MAX];
 /* ========================================================================================================= */
 /* -------------------------------------- Static Function Definitions -------------------------------------- */
-
 /* ========================================================================================================= */
 /* -------------------------------------- Inline Definition  ----------------------------------------------- */
 
@@ -127,6 +127,28 @@ Std_ReturnType Spi_Channel_ReadRxIBBuffer(Spi_ChannelIdType chId, uint16_t *Data
 	return retVal;
 }
 
+Std_ReturnType Spi_ChannelHandler_StartPooling(Spi_HwUnitIdType hwId, Spi_ChannelIdType chId)
+{
+	Std_ReturnType 			retVal	= E_NOT_OK;
+	Spi_Hw_RegType			*hwBase	= CfgPtr->controllerConfig[hwId].base;
+	Spi_ChannelRuntimeType	*chRt	= &channelRnt[chId];
+
+	if (STD_FALSE == SPI_LL_IsBusy(hwBase))
+	{
+		Rnt.controllerRnt[hwId].activeContStatus 	= SPI_BUSY;
+		Rnt.controllerRnt[hwId].activeChannelId 	= chId;
+
+		chRt->txIndex = 0;
+		chRt->rxIndex = 0;
+
+		SPI_LL_PeripEn(hwBase);
+
+		Spi_Channel_Callback(hwId);
+
+		retVal	= E_OK;
+	}
+	return retVal;
+}
 
 Std_ReturnType Spi_ChannelHandler_StartAsynch(Spi_HwUnitIdType hwId, Spi_ChannelIdType chId)
 {
@@ -143,7 +165,7 @@ Std_ReturnType Spi_ChannelHandler_StartAsynch(Spi_HwUnitIdType hwId, Spi_Channel
 		chRt->rxIndex = 0;
 
 
-		SPI_LL_PeripDis(hwBase);
+		//SPI_LL_PeripDis(hwBase);
 
 		switch (CfgPtr->channelConfig[chId].dir)
 		{
@@ -193,7 +215,7 @@ void Spi_Channel_Callback(Spi_HwUnitIdType hwID)
 	Spi_ChannelRuntimeType	*chRt	= &channelRnt[acChId];
 	Spi_Hw_RegType			*hwBase	= CfgPtr->controllerConfig[hwID].base;
 	const Spi_ChannelConfigType 	*chCfg 	= &CfgPtr->channelConfig[acChId];
-	Spi_FrameConfigType		*frame	= CfgPtr->externalDeviceConfig[CfgPtr->jobConfig[Rnt.controllerRnt[hwID].activeJobId].exDeviceID].frame;
+	const Spi_FrameConfigType		*frame	= CfgPtr->externalDeviceConfig[CfgPtr->jobConfig[Rnt.controllerRnt[hwID].activeJobId].exDeviceID].frame;
 
 	Std_boolean DataBufferRXNE;
 	Std_boolean DataBufferTXE;

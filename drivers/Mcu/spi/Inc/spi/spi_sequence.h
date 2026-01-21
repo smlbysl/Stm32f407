@@ -1,33 +1,34 @@
 /*
- * spi_private.h
+ * spi_sequence.h
  *
- *  Created on: Jan 13, 2026
+ *  Created on: Jan 20, 2026
  *      Author: smlby
  */
 
-#ifndef MCU_SPI_INC_SPI_SPI_PRIVATE_H_
-#define MCU_SPI_INC_SPI_SPI_PRIVATE_H_
+#ifndef MCU_SPI_INC_SPI_SPI_SEQUENCE_H_
+#define MCU_SPI_INC_SPI_SPI_SEQUENCE_H_
 
 
 /* ========================================================================================================= */
 /* -------------------------------------- Include  --------------------------------------------------------- */
-#include <std_types.h>
 #include "spi_private_types.h"
-#include "spi_cfg.h"
-#include "spi_hw.h"
-#include "spi_ll.h"
-#include <stddef.h>
+#include "spi_job.h"
+#include "spi_channel.h"
+#include "spi_hwunit.h"
+#include "spi_hwunit_cfg.h"
 /* ========================================================================================================= */
 /* -------------------------------------- Macro Definitions ------------------------------------------------ */
+#define SPI_CHANNELLENGTH_MAX 1u
 /* ========================================================================================================= */
 /* -------------------------------------- Type Definitions  ------------------------------------------------ */
 /* ========================================================================================================= */
 /* -------------------------------------- Extern Definitions  ---------------------------------------------- */
-extern const Spi_ConfigType	*CfgPtr;
-extern const Spi_HwUnitIdType HwIdMap[SPI_HWID_MAX];
-extern const Spi_JobIdType jobIdMap[SPI_JOB_MAX];
-extern Spi_DrvierRuntimeType Rnt;
+extern Spi_SequenceRuntimeType 		seqRnt[SPI_SEQUENCE_MAX];
 /* ========================================================================================================= */
 /* -------------------------------------- API Definitions  ------------------------------------------------- */
+void Spi_SequenceHandler();
+Std_ReturnType Spi_SeqHandler_AsychSeqTrigger(Spi_SequenceIdType seqId);
+void Spi_SequenceHandler_Init(void);
+Std_ReturnType Spi_SeqHandler_SyncTransmitTrigger(Spi_SequenceIdType Sequence);
 
-#endif /* MCU_SPI_INC_SPI_SPI_PRIVATE_H_ */
+#endif /* MCU_SPI_INC_SPI_SPI_SEQUENCE_H_ */

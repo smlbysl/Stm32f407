@@ -11,48 +11,41 @@
 
 /* ========================================================================================================= */
 /* -------------------------------------- Include  --------------------------------------------------------- */
-
-
 #include <std_types.h>
-
-
 /* ========================================================================================================= */
 /* -------------------------------------- Macro Definitions ------------------------------------------------ */
-
-
 /* ========================================================================================================= */
 /* -------------------------------------- Type Definitions  ------------------------------------------------ */
-
 /**
  * @link 	[SWS_Spi_00376]
  * @brief 	Type of application data buffer elements
  */
-typedef uint8_t		Spi_DataBufferType;
+//typedef uint8_t		Spi_DataBufferType;
 /**
  * @link 	[SWS_Spi_00377]
  * @brief 	Type for defining the number of data elements to send and / or receive by Channel
  */
-typedef uint16_t	Spi_NumberOfDataType;
+//typedef uint16_t	Spi_NumberOfDataType;
 /**
  * @link 	[SWS_Spi_00378]
  * @brief 	Specifies the identification (ID) for a Channel.
  */
-typedef uint8_t		Spi_ChannelType;
+//typedef uint8_t		Spi_ChannelType;
 /**
  * @link 	[SWS_Spi_00379]
  * @brief 	Specifies the identification (ID) for a Job.
  */
-typedef uint16_t	Spi_JobType;
+//typedef uint16_t	Spi_JobType;
 /**
  * @link 	[SWS_Spi_00380]
  * @brief 	Specifies the identification (ID) for a sequence of jobs.
  */
-typedef uint8_t		Spi_SequenceType;
+//typedef uint8_t		Spi_SequenceType;
 /**
  * @link 	[SWS_Spi_00381]
  * @brief 	Specifies the identification (ID) for a SPI Hardware microcontroller peripheral (unit).
  */
-typedef uint8_t 	Spi_HWUnitType;
+//typedef uint8_t 	Spi_HWUnitType;
 
 /* --------------------------------------------------------------------------------------------------------- */
 /* -------------------------------------- Enumeration Definitions  ----------------------------------------- */
