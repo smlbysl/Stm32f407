@@ -133,12 +133,12 @@ Std_ReturnType Spi_AsyncTransmit(Spi_SequenceIdType seqId)
 
 }
 
-Std_ReturnType Spi_WriteIB(Spi_ChannelIdType chId, const uint16_t *DataBuffer)
+Std_ReturnType Spi_WriteIB(Spi_ChannelIdType chId, const uint8_t *DataBuffer)
 {
 	return Spi_Channel_WriteTxIBBuffer(chId, DataBuffer);
 }
 
-Std_ReturnType Spi_ReadIB(Spi_ChannelIdType chId, const uint16_t *DataBuffer)
+Std_ReturnType Spi_ReadIB(Spi_ChannelIdType chId, const uint8_t *DataBuffer)
 {
 	//return Spi_Channel_WriteTxIBBuffer(chId, DataBuffer);
 	return 1;

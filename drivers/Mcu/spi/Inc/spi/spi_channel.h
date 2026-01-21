@@ -22,8 +22,8 @@ extern Spi_ChannelRuntimeType		channelRnt[SPI_CHANNEL_MAX];
 /* ========================================================================================================= */
 /* -------------------------------------- API Definitions  ------------------------------------------------- */
 /* --------------------------------------------------------------------------------------------------------- */
-Std_ReturnType Spi_Channel_ReadRxIBBuffer(Spi_ChannelIdType chId, uint16_t *DataBuffer);
-Std_ReturnType Spi_Channel_WriteTxIBBuffer(Spi_ChannelIdType chId, const uint16_t *DataBuffer);
+Std_ReturnType Spi_Channel_ReadRxIBBuffer(Spi_ChannelIdType chId, uint8_t *DataBuffer);
+Std_ReturnType Spi_Channel_WriteTxIBBuffer(Spi_ChannelIdType chId, const uint8_t *DataBuffer);
 Std_ReturnType Spi_ChannelHandler_StartAsynch(Spi_HwUnitIdType hwId, Spi_ChannelIdType chId);
 Std_ReturnType Spi_ChannelHandler_EndAsynch(Spi_HwUnitIdType hwId);
 Std_ReturnType Spi_ChannelHandler_StartPooling(Spi_HwUnitIdType hwId, Spi_ChannelIdType chId);

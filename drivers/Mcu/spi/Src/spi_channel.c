@@ -20,8 +20,8 @@
 Spi_ChannelRuntimeType		channelRnt[SPI_CHANNEL_MAX];
 /* ========================================================================================================= */
 /* -------------------------------------- Local Variable Definition  --------------------------------------- */
-static uint16_t Spi_IB_Tx[SPI_CHANNEL_MAX][SPI_CHANNELLENGTH_MAX];
-static uint16_t Spi_IB_Rx[SPI_CHANNEL_MAX][SPI_CHANNELLENGTH_MAX];
+static uint8_t Spi_IB_Tx[SPI_CHANNEL_MAX][SPI_CHANNELLENGTH_MAX];
+static uint8_t Spi_IB_Rx[SPI_CHANNEL_MAX][SPI_CHANNELLENGTH_MAX];
 /* ========================================================================================================= */
 /* -------------------------------------- Static Function Definitions -------------------------------------- */
 /* ========================================================================================================= */
@@ -57,7 +57,7 @@ void Spi_Channel_Init(void)
 }
 
 
-Std_ReturnType Spi_Channel_WriteTxIBBuffer(Spi_ChannelIdType chId, const uint16_t *DataBuffer)
+Std_ReturnType Spi_Channel_WriteTxIBBuffer(Spi_ChannelIdType chId, const uint8_t *DataBuffer)
 {
 	Std_ReturnType 	retVal	= E_NOT_OK;
 	const Spi_ChannelConfigType	*chCfg = &CfgPtr->channelConfig[chId];
@@ -92,7 +92,7 @@ Std_ReturnType Spi_Channel_WriteTxIBBuffer(Spi_ChannelIdType chId, const uint16_
 }
 
 
-Std_ReturnType Spi_Channel_ReadRxIBBuffer(Spi_ChannelIdType chId, uint16_t *DataBuffer)
+Std_ReturnType Spi_Channel_ReadRxIBBuffer(Spi_ChannelIdType chId, uint8_t *DataBuffer)
 {
 	Std_ReturnType 	retVal	= E_NOT_OK;
 	const Spi_ChannelConfigType	*chCfg = &CfgPtr->channelConfig[chId];
@@ -217,6 +217,8 @@ void Spi_Channel_Callback(Spi_HwUnitIdType hwID)
 	const Spi_ChannelConfigType 	*chCfg 	= &CfgPtr->channelConfig[acChId];
 	const Spi_FrameConfigType		*frame	= CfgPtr->externalDeviceConfig[CfgPtr->jobConfig[Rnt.controllerRnt[hwID].activeJobId].exDeviceID].frame;
 
+	uint16_t tempBuffer = 0;
+
 	Std_boolean DataBufferRXNE;
 	Std_boolean DataBufferTXE;
 
@@ -234,7 +236,7 @@ void Spi_Channel_Callback(Spi_HwUnitIdType hwID)
 	    	uint16_t dummy;
 	    	if(SPI_DATAFF_8BIT == frame->dataWidth)
 	    	{
-		    	SPI_LL_ReadDR_8Bit(hwBase, &dummy);
+		    	SPI_LL_ReadDR_8Bit(hwBase, (uint8_t*)&dummy);
 	    	}
 	    	else
 	    	{
@@ -247,12 +249,24 @@ void Spi_Channel_Callback(Spi_HwUnitIdType hwID)
 	    	if (SPI_DATAFF_8BIT == frame->dataWidth)
 	    	{
 	    		SPI_LL_WriteDR_8Bit(hwBase, ((uint8_t*)chRt->txPtr)[chRt->txIndex]);
+	    		chRt->txIndex ++;
 	    	}
 	    	else
 	    	{
-	    		SPI_LL_WriteDR_16Bit(hwBase, ((uint16_t*)chRt->txPtr)[chRt->txIndex]);
+	    		if ((chCfg->length - chRt->txIndex) > 1 )
+	    		{
+		    		tempBuffer = ((uint16_t)chRt->txPtr[chRt->txIndex+1] << 8) & (uint16_t)chRt->txPtr[chRt->txIndex];
+		    		chRt->txIndex += 2;
+	    		}
+	    		else
+	    		{
+		    		tempBuffer = (uint16_t)chRt->txPtr[chRt->txIndex];
+		    		chRt->txIndex ++;
+	    		}
+
+	    		SPI_LL_WriteDR_16Bit(hwBase, tempBuffer);
 	    	}
-	    	chRt->txIndex ++;
+
 		}
 	    break;
 
@@ -262,12 +276,25 @@ void Spi_Channel_Callback(Spi_HwUnitIdType hwID)
 	    	if(SPI_DATAFF_8BIT == frame->dataWidth)
 	    	{
 		    	SPI_LL_ReadDR_8Bit(hwBase, &chRt->rxPtr[chRt->rxIndex]);
+		    	chRt->rxIndex ++;
 	    	}
 	    	else
 	    	{
-		    	SPI_LL_ReadDR_16Bit(hwBase, &chRt->rxPtr[chRt->rxIndex]);
+	    		if ((chCfg->length - chRt->txIndex) > 1 )
+	    		{
+			    	SPI_LL_ReadDR_16Bit(hwBase, &tempBuffer);
+			    	chRt->rxPtr[chRt->rxIndex] 		= (uint8_t)(tempBuffer &0xFF);
+			    	chRt->rxPtr[chRt->rxIndex + 1] 	= (uint8_t)((tempBuffer >> 8) &0xFF);
+		    		chRt->txIndex += 2;
+	    		}
+	    		else
+	    		{
+			    	SPI_LL_ReadDR_16Bit(hwBase, &tempBuffer);
+			    	chRt->rxPtr[chRt->rxIndex] = (uint8_t)(tempBuffer &0xFF);
+		    		chRt->txIndex ++;
+	    		}
 	    	}
-	    	chRt->rxIndex ++;
+
 
 	    }
 	    if ((DataBufferTXE) && (chRt->txIndex < chCfg->length))
@@ -291,12 +318,25 @@ void Spi_Channel_Callback(Spi_HwUnitIdType hwID)
 	    	if(SPI_DATAFF_8BIT == frame->dataWidth)
 	    	{
 		    	SPI_LL_ReadDR_8Bit(hwBase, &chRt->rxPtr[chRt->rxIndex]);
+		    	chRt->rxIndex ++;
 	    	}
 	    	else
 	    	{
-		    	SPI_LL_ReadDR_16Bit(hwBase, &chRt->rxPtr[chRt->rxIndex]);
+	    		if ((chCfg->length - chRt->txIndex) > 1 )
+				{
+					SPI_LL_ReadDR_16Bit(hwBase, &tempBuffer);
+					chRt->rxPtr[chRt->rxIndex]   	= (uint8_t)(tempBuffer &0xFF);
+					chRt->rxPtr[chRt->rxIndex + 1] 	=(uint8_t)((tempBuffer >> 8) &0xFF);
+					chRt->txIndex += 2;
+				}
+				else
+				{
+					SPI_LL_ReadDR_16Bit(hwBase, &tempBuffer);
+					chRt->rxPtr[chRt->rxIndex] = (uint8_t)(tempBuffer &0xFF);
+					chRt->txIndex ++;
+				}
 	    	}
-	    	chRt->rxIndex ++;
+
 	    }
 
 	    if ((DataBufferTXE) && (chRt->txIndex < chCfg->length))
@@ -304,12 +344,23 @@ void Spi_Channel_Callback(Spi_HwUnitIdType hwID)
 	    	if (SPI_DATAFF_8BIT == frame->dataWidth)
 			{
 				SPI_LL_WriteDR_8Bit(hwBase, ((uint8_t*)chRt->txPtr)[chRt->txIndex]);
+				chRt->txIndex ++;
 			}
 			else
 			{
-				SPI_LL_WriteDR_16Bit(hwBase, ((uint16_t*)chRt->txPtr)[chRt->txIndex]);
+	    		if ((chCfg->length - chRt->txIndex) > 1 )
+	    		{
+		    		tempBuffer = ((uint16_t)chRt->txPtr[chRt->txIndex+1] << 8) & (uint16_t)chRt->txPtr[chRt->txIndex];
+		    		chRt->txIndex += 2;
+	    		}
+	    		else
+	    		{
+		    		tempBuffer = (uint16_t)chRt->txPtr[chRt->txIndex];
+		    		chRt->txIndex ++;
+	    		}
+
+	    		SPI_LL_WriteDR_16Bit(hwBase, tempBuffer);
 			}
-			chRt->txIndex ++;
 	    }
 	    break;
 	};

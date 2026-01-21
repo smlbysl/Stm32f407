@@ -25,8 +25,8 @@
 void Spi_Init(const Spi_ConfigType* ConfigPtr);
 void Spi_Main(void);
 Std_ReturnType Spi_AsyncTransmit(Spi_SequenceIdType seqId);
-Std_ReturnType Spi_WriteIB(Spi_ChannelIdType chId, const uint16_t *DataBuffer);
-Std_ReturnType Spi_ReadIB(Spi_ChannelIdType chId, const uint16_t *DataBuffer);
+Std_ReturnType Spi_WriteIB(Spi_ChannelIdType chId, const uint8_t *DataBuffer);
+Std_ReturnType Spi_ReadIB(Spi_ChannelIdType chId, const uint8_t *DataBuffer);
 Std_ReturnType Spi_SetupEB( Spi_ChannelIdType Channel,
 							const uint16_t* SrcDataBufferPtr,
 							uint16_t* DesDataBufferPtr,

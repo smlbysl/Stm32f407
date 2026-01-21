@@ -152,7 +152,7 @@ static inline void SPI_LL_WriteDR_16Bit(Spi_Hw_RegType *p,uint16_t DataBuffer)
 	p->DR = SPI_DR_DR_WRITE_16B(DataBuffer);
 }
 
-static inline void SPI_LL_ReadDR_8Bit(Spi_Hw_RegType *p,uint16_t *DataBuffer)
+static inline void SPI_LL_ReadDR_8Bit(Spi_Hw_RegType *p,uint8_t *DataBuffer)
 {
 	*DataBuffer = (uint8_t)(p->DR & SPI_DR_DR_Msk);
 }

@@ -330,8 +330,8 @@ typedef struct
 	Spi_ChannelResultType		status;
     uint16_t 					txIndex;
     uint16_t 					rxIndex;
-    const uint16_t* 			txPtr;   // EB
-    uint16_t*       			rxPtr;   // EB
+    const uint8_t* 			txPtr;   // EB
+    uint8_t*       			rxPtr;   // EB
 } Spi_ChannelRuntimeType;
 
 typedef struct

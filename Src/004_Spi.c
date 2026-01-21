@@ -54,7 +54,7 @@ int main(void)
 
 	uint8_t retval = 0xFF;
 
-	uint16_t array[3] = {185 , 170, 15};
+	uint8_t array[3] = {185 , 170, 15};
 
 	GPIOA_PCLK_EN();
 	GPIOD_PCLK_EN();
