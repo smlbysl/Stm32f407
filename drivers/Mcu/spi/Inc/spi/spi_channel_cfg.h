@@ -18,13 +18,16 @@
 /* -------------------------------------- Macro Definitions ------------------------------------------------ */
 #define SPI_JOB1_CHANNEL_MAX	1u
 #define SPI_JOB2_CHANNEL_MAX	2u
+#define SPI_JOB3_CHANNEL_MAX	1u
+#define SPI_JOB4_CHANNEL_MAX	1u
 #define SPI_CHANNEL_LENGTH_MAX	1u
 /* ========================================================================================================= */
 /* -------------------------------------- Global Variables Definition -------------------------------------- */
 extern const Spi_ChannelConfigType ChannelConfigs[SPI_CHANNEL_MAX];
 extern const Spi_ChannelIdType ChannelList1 [SPI_JOB1_CHANNEL_MAX];
 extern const Spi_ChannelIdType ChannelList2 [SPI_JOB2_CHANNEL_MAX];
-
+extern const Spi_ChannelIdType ChannelList3 [SPI_JOB3_CHANNEL_MAX];
+extern const Spi_ChannelIdType ChannelList4 [SPI_JOB4_CHANNEL_MAX];
 /* ========================================================================================================= */
 /* -------------------------------------- Peripheral Definitions ------------------------------------------- */
 

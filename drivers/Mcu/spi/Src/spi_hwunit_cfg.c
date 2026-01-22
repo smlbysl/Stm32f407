@@ -33,6 +33,24 @@ const Spi_ControllerConfigType ControllerConfigs[SPI_HWID_MAX] =
 		SPI_DISABLE,
 		/* Crc Capable */
 		SPI_DISABLE
+	},
+
+	/*SPI2*/
+	{
+		/*ID*/
+		SPI_SPI2,
+		/* Register */
+		SPI_HW_SPI2,
+		/*Role*/
+		SPI_MASTER,
+		/* Arbitration */
+		SPI_ARBITRATION_NONE,
+		/* DMA Capable */
+		SPI_DISABLE,
+		/* SPI_DISABLE */
+		SPI_DISABLE,
+		/* Crc Capable */
+		SPI_DISABLE
 	}
 };
 
@@ -67,13 +85,25 @@ const Spi_ExternalDeviceConfigType ExDevConfigs[SPI_EXDEVID_MAX] =
 		&frameConfigs[SPI_FRAME_1],
 		/* Bound Rate*/
 		1 /* MHz*/,
+	},
+	/* SPI_EXDEV_1*/
+	{
+		/* ID */
+		SPI_EXDEV_1,
+		/* Controller */
+		&ControllerConfigs[SPI_SPI2],
+		/* Frame */
+		&frameConfigs[SPI_FRAME_1],
+		/* Bound Rate*/
+		1 /* MHz*/,
 	}
 };
 
 
 const Spi_HwUnitIdType HwIdMap[SPI_HWID_MAX] =
 {
-		SPI_SPI1
+		SPI_SPI1,
+		SPI_SPI2
 };
 
 /* ========================================================================================================= */

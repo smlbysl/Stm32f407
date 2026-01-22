@@ -54,31 +54,40 @@ int main(void)
 
 	uint8_t retval = 0xFF;
 
-	uint8_t array[3] = {185 , 170, 15};
+	uint8_t channel1[1] = {11};
+	uint8_t channel2[1] = {121};
+	uint8_t channel3[1] = {122};
+	uint8_t channel4[1] = {231};
+	uint8_t channel5[1] = {241};
 
 	GPIOA_PCLK_EN();
+	GPIOB_PCLK_EN();
 	GPIOD_PCLK_EN();
 	SPI1_PCLK_EN();
+	SPI2_PCLK_EN();
 	GPIO_Init(&Gpio_ConfigHandle);
 	Nvic_EnableIRQ(35);
+	Nvic_EnableIRQ(36);
 	//EXTI_Init(&EXTI_InitHandle);
 	//ICU_EnableNotification(IRQ_GPIO_PA0);
 
 	Spi_Init(&SpiConfig);
 
-	retval = Spi_WriteIB(SPI_CHANNEL_1,array);
-	retval = Spi_WriteIB(SPI_CHANNEL_2,&array[1]);
-	retval = Spi_WriteIB(SPI_CHANNEL_3,&array[2]);
-	retval = Spi_AsyncTransmit(SPI_SEQUENCE_1);
-
 	while(1)
 	{
-		Spi_Main();
-		delayFunc();
-		retval = Spi_WriteIB(SPI_CHANNEL_1,array);
-		retval = Spi_WriteIB(SPI_CHANNEL_2,&array[1]);
-		retval = Spi_WriteIB(SPI_CHANNEL_3,&array[2]);
+
+		retval = Spi_WriteIB(SPI_CHANNEL_1,channel1);
+		retval = Spi_WriteIB(SPI_CHANNEL_2,channel2);
+		retval = Spi_WriteIB(SPI_CHANNEL_3,channel3);
+		retval = Spi_WriteIB(SPI_CHANNEL_4,channel4);
+		retval = Spi_WriteIB(SPI_CHANNEL_5,channel5);
+
 		retval = Spi_SyncTransmit(SPI_SEQUENCE_1);
+		retval = Spi_AsyncTransmit(SPI_SEQUENCE_2);
+		retval = Spi_AsyncTransmit(SPI_SEQUENCE_3);
+		delayFunc();
+		Spi_Main();
+
 	}
 
     /* Loop forever */

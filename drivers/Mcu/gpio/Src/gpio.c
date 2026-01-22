@@ -134,7 +134,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 				else
 				{
 					PortShadow [pCfg[i].portId].afrh_mask 	|= GPIO_AFRH_Msk(pCfg[i].pinNumber);
-					PortShadow [pCfg[i].portId].afrh_mask 	|= GPIO_AFRH_Val(pCfg[i].pinNumber,pCfg[i].alternate);
+					PortShadow [pCfg[i].portId].afrh_val 	|= GPIO_AFRH_Val(pCfg[i].pinNumber,pCfg[i].alternate);
 				}
 			}
 			else

@@ -23,8 +23,9 @@
 #define GPIO_CHANNEL_PD15	((Gpio_ChannelRefType)3)
 #define GPIO_CHANNEL_PA0	((Gpio_ChannelRefType)4)
 #define GPIO_CHANNEL_PA3	((Gpio_ChannelRefType)5)
+#define GPIO_CHANNEL_PB11	((Gpio_ChannelRefType)6)
 
-#define GPIO_CHANNEL_NUM	(6U)
+#define GPIO_CHANNEL_NUM	(7U)
 
 
 /* ========================================================================================================= */

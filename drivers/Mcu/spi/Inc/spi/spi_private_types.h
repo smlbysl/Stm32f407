@@ -39,6 +39,7 @@ typedef enum
 typedef enum
 {
 	SPI_SPI1 = 0,
+	SPI_SPI2,
 	SPI_HWID_MAX,
 	SPI_HWID_UNDEFINED
 }Spi_HwUnitIdType;
@@ -64,6 +65,7 @@ typedef enum
 typedef enum
 {
 	SPI_SENSOR = 0,
+	SPI_EXDEV_1,
 	SPI_EXDEVID_MAX,
 	SPI_EXDEVID_UNDEFINED
 }Spi_ExDevIdType;
@@ -144,6 +146,8 @@ typedef enum
 	SPI_CHANNEL_1 = 0,
 	SPI_CHANNEL_2,
 	SPI_CHANNEL_3,
+	SPI_CHANNEL_4,
+	SPI_CHANNEL_5,
 	SPI_CHANNEL_MAX
 }Spi_ChannelIdType;
 
@@ -171,6 +175,9 @@ typedef enum
 {
 	SPI_JOB_1 = 0,
 	SPI_JOB_2,
+	SPI_JOB_3,
+	SPI_JOB_4,
+	SPI_JOB_5,
 	SPI_JOB_MAX,
 	SPI_JOB_UNDEFINED
 }Spi_JobIdType;
@@ -188,6 +195,8 @@ typedef enum
 typedef enum
 {
 	SPI_SEQUENCE_1 = 0,
+	SPI_SEQUENCE_2,
+	SPI_SEQUENCE_3,
 	SPI_SEQUENCE_MAX,
 	SPI_SEQUENCE_UNDEFINED
 }Spi_SequenceIdType;

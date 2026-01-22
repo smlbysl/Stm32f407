@@ -10,6 +10,7 @@
 /* ========================================================================================================= */
 /* -------------------------------------- Include  --------------------------------------------------------- */
 #include "spi_sequence_cfg.h"
+#include "spi_private.h"
 #include "spi_job_cfg.h"
 /* ========================================================================================================= */
 /* -------------------------------------- Static Function Definitions -------------------------------------- */
@@ -21,15 +22,38 @@
 /* ----------------- Seq Configs ---------------------------------- */
 const Spi_SequenceConfigType seqConfigs [SPI_SEQUENCE_MAX] =
 {
+	/* SEQ 1 */
 	{
 		.hwUnitID 	= SPI_SPI1,
-		.jobCount 	= 2,
+		.jobCount 	= SPI_JOB_LIST_1_MAX,
 		.priority 	= 0,
 		.sequenceId = SPI_SEQUENCE_1,
 		.jobList    = joblist1
+	},
+	/* SEQ 1 */
+	{
+		.hwUnitID 	= SPI_SPI1,
+		.jobCount 	= SPI_JOB_LIST_2_MAX,
+		.priority 	= 0,
+		.sequenceId = SPI_SEQUENCE_2,
+		.jobList    = joblist2
+	},
+	/* SEQ 1 */
+	{
+		.hwUnitID 	= SPI_SPI2,
+		.jobCount 	= SPI_JOB_LIST_3_MAX,
+		.priority 	= 0,
+		.sequenceId = SPI_SEQUENCE_3,
+		.jobList    = joblist3
 	}
 };
 
+Spi_SequenceIdType seqIdMap[SPI_SEQUENCE_MAX] =
+{
+		SPI_SEQUENCE_1,
+		SPI_SEQUENCE_2,
+		SPI_SEQUENCE_3
+};
 /* ========================================================================================================= */
 /* -------------------------------------- Local Variable Definition  --------------------------------------- */
 /* ========================================================================================================= */

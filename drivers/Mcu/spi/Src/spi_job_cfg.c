@@ -33,7 +33,7 @@ const Spi_JobConfigType JobConfigs [] =
 		/* Channel Lists */
 		ChannelList1,
 		/* Channel Number */
-		1,
+		SPI_JOB1_CHANNEL_MAX,
 		{
 			/*CS is used */
 			STD_TRUE,
@@ -51,11 +51,11 @@ const Spi_JobConfigType JobConfigs [] =
 		/* External Device ID*/
 		SPI_SENSOR,
 		/*Transfer Type */
-		SPI_TRANSFER_INTERRUPT,
+		SPI_TRANSFER_POLLING,
 		/* Channel Lists */
 		ChannelList2,
 		/* Channel Number */
-		2,
+		SPI_JOB2_CHANNEL_MAX,
 		{
 			/*CS is used */
 			STD_TRUE,
@@ -64,19 +64,75 @@ const Spi_JobConfigType JobConfigs [] =
 			/*Enable Line*/
 			SPI_ACTIVE_LOW
 		}
+	},
+	{
+		/* ID */
+		SPI_JOB_3,
+		/* Hw Unit ID*/
+		SPI_SPI2,
+		/* External Device ID*/
+		SPI_EXDEV_1,
+		/*Transfer Type */
+		SPI_TRANSFER_INTERRUPT,
+		/* Channel Lists */
+		ChannelList3,
+		/* Channel Number */
+		SPI_JOB3_CHANNEL_MAX,
+		{
+			/*CS is used */
+			STD_TRUE,
+			/*GPOI CHNL*/
+			GPIO_CHANNEL_PB11,
+			/*Enable Line*/
+			SPI_ACTIVE_LOW
+		}
+	},
+	{
+		/* ID */
+		SPI_JOB_4,
+		/* Hw Unit ID*/
+		SPI_SPI2,
+		/* External Device ID*/
+		SPI_EXDEV_1,
+		/*Transfer Type */
+		SPI_TRANSFER_INTERRUPT,
+		/* Channel Lists */
+		ChannelList4,
+		/* Channel Number */
+		SPI_JOB4_CHANNEL_MAX,
+		{
+			/*CS is used */
+			STD_TRUE,
+			/*GPOI CHNL*/
+			GPIO_CHANNEL_PB11,
+			/*Enable Line*/
+			SPI_ACTIVE_LOW
+		}
 	}
 };
 
-const Spi_JobIdType joblist1 [SPI_JOB_MAX] =
+const Spi_JobIdType joblist1 [SPI_JOB_LIST_1_MAX] =
 {
 		SPI_JOB_1,
+};
+
+const Spi_JobIdType joblist2 [SPI_JOB_LIST_2_MAX] =
+{
 		SPI_JOB_2
+};
+
+const Spi_JobIdType joblist3 [SPI_JOB_LIST_3_MAX] =
+{
+		SPI_JOB_3,
+		SPI_JOB_4
 };
 
 const Spi_JobIdType jobIdMap[SPI_JOB_MAX] =
 {
 		SPI_JOB_1,
-		SPI_JOB_2
+		SPI_JOB_2,
+		SPI_JOB_3,
+		SPI_JOB_4
 };
 
 /* ========================================================================================================= */

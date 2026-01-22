@@ -17,11 +17,16 @@
 
 /* ========================================================================================================= */
 /* -------------------------------------- Macro Definitions ------------------------------------------------ */
-#define SPI_JOB_LIST_1_MAX	2U
+#define SPI_JOB_LIST_1_MAX	1U
+#define SPI_JOB_LIST_2_MAX	1U
+#define SPI_JOB_LIST_3_MAX	2U
+
 /* ========================================================================================================= */
 /* -------------------------------------- Global Variables Definition -------------------------------------- */
 extern const Spi_JobConfigType JobConfigs [SPI_JOB_MAX];
 extern const Spi_JobIdType joblist1 [SPI_JOB_LIST_1_MAX];
+extern const Spi_JobIdType joblist2 [SPI_JOB_LIST_2_MAX];
+extern const Spi_JobIdType joblist3 [SPI_JOB_LIST_3_MAX];
 
 /* ========================================================================================================= */
 /* -------------------------------------- Peripheral Definitions ------------------------------------------- */

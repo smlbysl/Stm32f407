@@ -35,6 +35,18 @@ const Spi_ChannelConfigType ChannelConfigs[SPI_CHANNEL_MAX] =
 		SPI_CH_TX,
 		/* Length*/
 		1
+	},
+	{
+		/* Dir Type */
+		SPI_CH_TX,
+		/* Length*/
+		1
+	},
+	{
+		/* Dir Type */
+		SPI_CH_TX,
+		/* Length*/
+		1
 	}
 };
 
@@ -48,6 +60,18 @@ const Spi_ChannelIdType ChannelList2 [SPI_JOB2_CHANNEL_MAX] =
 		SPI_CHANNEL_2,
 		SPI_CHANNEL_3
 };
+
+const Spi_ChannelIdType ChannelList3 [SPI_JOB3_CHANNEL_MAX] =
+{
+		SPI_CHANNEL_4,
+};
+
+const Spi_ChannelIdType ChannelList4 [SPI_JOB4_CHANNEL_MAX] =
+{
+		SPI_CHANNEL_5,
+};
+
+
 
 /* ========================================================================================================= */
 /* -------------------------------------- Local Variable Definition  --------------------------------------- */

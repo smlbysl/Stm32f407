@@ -32,7 +32,7 @@ static void Spi_IrqHandler(Spi_HwUnitIdType hw);
 /* -------------------------------------- Static Function Implementation ----------------------------------- */
 static void Spi_IrqHandler(Spi_HwUnitIdType hw)
 {
-    if (Rnt.controllerRnt->activeContStatus == SPI_IDLE)
+    if (Rnt.controllerRnt[hw].activeContStatus == SPI_IDLE)
         return;
 
     Spi_Channel_Callback(hw);

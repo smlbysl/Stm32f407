@@ -19,11 +19,6 @@
 Spi_SequenceRuntimeType seqRnt[SPI_SEQUENCE_MAX];
 /* ========================================================================================================= */
 /* -------------------------------------- Local Variable Definition  --------------------------------------- */
-static Spi_SequenceIdType seqIdMap[SPI_SEQUENCE_MAX] =
-{
-		SPI_SEQUENCE_1
-};
-
 static Spi_SeqStateMachType seqStateMach[SPI_HWID_MAX];
 /* ========================================================================================================= */
 /* -------------------------------------- Static Function Definitions -------------------------------------- */
@@ -70,7 +65,7 @@ static void Spi_SeqHandler_StartSeq(Spi_HwUnitIdType hwId)
 		seqRnt[temp].jobIndex = 0;
 		for (i = 0 ; i < seqCfg[temp].jobCount ; i++)
 		{
-			Rnt.jobRnt[i].status = SPI_JOB_QUEUED;
+			Rnt.jobRnt[seqCfg[temp].jobList[i]].status = SPI_JOB_QUEUED;
 		}
 	}
 	else
@@ -225,7 +220,8 @@ Std_ReturnType Spi_SeqHandler_SyncTransmitTrigger(Spi_SequenceIdType Sequence)
 
 
 	if((SPI_IDLE == Rnt.controllerRnt[hwId].activeContStatus) &&
-			(SPI_SEQUENCE_IDLE == seqStateMach[hwId]))
+			((SPI_SEQUENCE_IDLE == seqStateMach[hwId]) ||
+					(SPI_SEQUENCE_INIT == seqStateMach[hwId])))
 	{
 		seqStateMach[hwId] = SPI_SEQUENCE_PROCEDING;
 		/*Sequence Prepare*/

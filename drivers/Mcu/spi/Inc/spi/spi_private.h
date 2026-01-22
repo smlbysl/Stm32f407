@@ -26,6 +26,7 @@
 extern const Spi_ConfigType	*CfgPtr;
 extern const Spi_HwUnitIdType HwIdMap[SPI_HWID_MAX];
 extern const Spi_JobIdType jobIdMap[SPI_JOB_MAX];
+extern Spi_SequenceIdType seqIdMap[SPI_SEQUENCE_MAX];
 extern Spi_DrvierRuntimeType Rnt;
 /* ========================================================================================================= */
 /* -------------------------------------- API Definitions  ------------------------------------------------- */
