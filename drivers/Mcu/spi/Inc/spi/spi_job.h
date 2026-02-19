@@ -24,7 +24,7 @@ extern Spi_JobRuntimeType 			jobRnt[SPI_JOB_MAX];
 /* -------------------------------------- API Definitions  ------------------------------------------------- */
 void Spi_JobHandler_Init(void);
 
-void Spi_JobHandler(Spi_HwUnitIdType hwId);
+void Spi_JobHandler(void);
 Std_ReturnType Spi_JobHandler_StartJob(Spi_HwUnitIdType hwId, Spi_JobIdType requestJobId);
 
 

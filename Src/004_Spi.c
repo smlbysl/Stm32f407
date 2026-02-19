@@ -58,7 +58,7 @@ int main(void)
 	uint8_t channel2[1] = {121};
 	uint8_t channel3[1] = {122};
 	uint8_t channel4[1] = {231};
-	uint8_t channel5[1] = {241};
+	uint8_t channel5[2] = {241,242};
 
 	GPIOA_PCLK_EN();
 	GPIOB_PCLK_EN();

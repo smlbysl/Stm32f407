@@ -128,7 +128,7 @@ void Spi_SequenceHandler()
 			Spi_SeqHandler_StartSeq(hwId);
 
 		}
-		if (SPI_SEQUENCE_PROCEDING == seqStateMach[hwId])
+		else//if (SPI_SEQUENCE_PROCEDING == seqStateMach[hwId])
 		{
 			actSeqId = Rnt.controllerRnt[hwId].activeSequence;
 			actJobId = Rnt.controllerRnt[hwId].activeJobId;
@@ -152,7 +152,6 @@ void Spi_SequenceHandler()
 						if(E_OK == retVal)
 						{
 							seqRnt[actSeqId].jobIndex ++;
-							Spi_JobHandler(hwId);
 						}
 						else
 						{
@@ -171,16 +170,31 @@ void Spi_SequenceHandler()
 				else if (SPI_JOB_QUEUED == Rnt.jobRnt[actJobId].status)
 				{
 					retVal = Spi_JobHandler_StartJob(hwId, seqCfg->jobList[seqRnt[actSeqId].jobIndex]);
+					if(E_OK == retVal)
+					{
+					}
+					else
+					{
+						seqRnt[actSeqId].status = SPI_SEQ_FAILED;
+						retVal = Spi_SeqHandler_EndSeq(hwId);
+					}
 				}
 				else
 				{
-					/* Current Job Pending or Queued*/
-					Spi_JobHandler(hwId);
+					/* Current Job Pending */
 				}
 			}
 			else
 			{
 				retVal = Spi_JobHandler_StartJob(hwId, seqCfg->jobList[seqRnt[actSeqId].jobIndex]);
+				if(E_OK == retVal)
+				{
+				}
+				else
+				{
+					seqRnt[actSeqId].status = SPI_SEQ_FAILED;
+					retVal = Spi_SeqHandler_EndSeq(hwId);
+				}
 			}
 		}
 	}
@@ -234,6 +248,7 @@ Std_ReturnType Spi_SeqHandler_SyncTransmitTrigger(Spi_SequenceIdType Sequence)
 
 		while((SPI_SEQUENCE_IDLE != seqStateMach[hwId]))
 		{
+			Spi_JobHandler();
 			Spi_SequenceHandler();
 		}
 

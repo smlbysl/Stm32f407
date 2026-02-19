@@ -46,7 +46,7 @@ const Spi_ChannelConfigType ChannelConfigs[SPI_CHANNEL_MAX] =
 		/* Dir Type */
 		SPI_CH_TX,
 		/* Length*/
-		1
+		2
 	}
 };
 

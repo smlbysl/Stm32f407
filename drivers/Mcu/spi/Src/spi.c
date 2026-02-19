@@ -122,6 +122,7 @@ void Spi_Main(void)
 {
 	if(SPI_UNINIT != Rnt.activeContStatus)
 	{
+		Spi_JobHandler();
 		Spi_SequenceHandler();
 	}
 }
