@@ -147,7 +147,7 @@ void Spi_SequenceHandler()
 					/*Next Job */
 					if(seqCfg->jobCount > seqRnt[actSeqId].jobIndex + 1)
 					{
-						retVal = Spi_JobHandler_StartJob(hwId,  seqCfg->jobList[seqRnt[actSeqId].jobIndex + 1]);
+						retVal = Spi_JobHandler_StartJob(seqCfg->jobList[seqRnt[actSeqId].jobIndex + 1]);
 
 						if(E_OK == retVal)
 						{
@@ -169,7 +169,7 @@ void Spi_SequenceHandler()
 				}
 				else if (SPI_JOB_QUEUED == Rnt.jobRnt[actJobId].status)
 				{
-					retVal = Spi_JobHandler_StartJob(hwId, seqCfg->jobList[seqRnt[actSeqId].jobIndex]);
+					retVal = Spi_JobHandler_StartJob(seqCfg->jobList[seqRnt[actSeqId].jobIndex]);
 					if(E_OK == retVal)
 					{
 					}
@@ -186,7 +186,7 @@ void Spi_SequenceHandler()
 			}
 			else
 			{
-				retVal = Spi_JobHandler_StartJob(hwId, seqCfg->jobList[seqRnt[actSeqId].jobIndex]);
+				retVal = Spi_JobHandler_StartJob(seqCfg->jobList[seqRnt[actSeqId].jobIndex]);
 				if(E_OK == retVal)
 				{
 				}

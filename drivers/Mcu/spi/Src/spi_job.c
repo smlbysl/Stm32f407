@@ -112,16 +112,6 @@ void Spi_JobHandler(void)
 
 		if ( SPI_JOB_PENDING ==jobRnt[jobId].status)
 		{
-			if(SPI_TRANSFER_INTERRUPT == jobCfg->transferMode)
-			{
-				/*Do Nothing*/
-			}
-			else if (STD_TRUE != Rnt.hwDone)
-			{
-					/*Pooling*/
-				Spi_Channel_Callback(hwId);
-			}
-
 			if(Rnt.hwDone == STD_TRUE)
 			{
 				Rnt.hwDone = STD_FALSE;
@@ -153,6 +143,10 @@ void Spi_JobHandler(void)
 					Spi_JobHandler_EndJob(hwId);
 				}
 			}
+			else if (SPI_TRANSFER_INTERRUPT != jobCfg->transferMode)
+			{
+				Spi_Channel_Callback(hwId);
+			}
 			else
 			{
 				//Channel not okay yet
@@ -162,7 +156,7 @@ void Spi_JobHandler(void)
 
 }
 
-Std_ReturnType Spi_JobHandler_StartJob(Spi_HwUnitIdType hwId, Spi_JobIdType requestJobId)
+Std_ReturnType Spi_JobHandler_StartJob(Spi_JobIdType requestJobId)
 {
 	/* Configure device */
 	Std_ReturnType 	retVal = E_NOT_OK;
@@ -170,47 +164,58 @@ Std_ReturnType Spi_JobHandler_StartJob(Spi_HwUnitIdType hwId, Spi_JobIdType requ
 	uint8_t i;
 
 	const Spi_JobConfigType		*jobCfg	= &CfgPtr->jobConfig[requestJobId];
+	const Spi_HwUnitIdType 		hwId 	= jobCfg->hwUnitID;
+	Spi_JobIdType     			activeJobId = Rnt.controllerRnt[hwId].activeJobId;
 
-	if (SPI_JOB_QUEUED  == jobRnt[requestJobId].status)
+	if ((SPI_JOB_QUEUED  == jobRnt[requestJobId].status) &&
+		(SPI_JOB_PENDING != Rnt.jobRnt[activeJobId].status))
 	{
 		retVal = Spi_HwUnit_SwitchExDev(hwId, jobCfg->exDeviceID);
+
 		if(E_OK != retVal)
 		{
 			/* Return Not ok*/
 		}
 		else
 		{
-			Rnt.controllerRnt[hwId].activeJobId = requestJobId;
-
-			Rnt.controllerRnt[hwId].channelIndex = 0;
 			for(i = 0 ; i < jobCfg->channelCount ; i++)
 			{
 				if (SPI_CHANNEL_PENDING != Rnt.channelRnt[jobCfg->channelList[i]].status)
 				{
-					return E_NOT_OK;
+					retVal = E_NOT_OK;
 				}
 			}
 
-			Spi_JobHandler_Assert(requestJobId);
+			if(E_NOT_OK != retVal)
+			{
 
-			if(SPI_TRANSFER_INTERRUPT == jobCfg->transferMode)
-			{
-				retVal = Spi_ChannelHandler_StartAsynch(hwId,  jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex]);
-			}
-			else
-			{
-					/*Pooling*/
-				retVal = Spi_ChannelHandler_StartPooling(hwId, jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex]);
-			}
-			if(E_OK == retVal)
-			{
+				Rnt.controllerRnt[hwId].activeJobId = requestJobId;
+
+				Rnt.controllerRnt[hwId].channelIndex = 0;
+
 				Rnt.jobRnt[requestJobId].status = SPI_JOB_PENDING;
-			}
-			else
-			{
-				Rnt.jobRnt[requestJobId].status = SPI_JOB_FAILED;
-			}
 
+				Spi_JobHandler_Assert(requestJobId);
+
+				if(SPI_TRANSFER_INTERRUPT == jobCfg->transferMode)
+				{
+					retVal = Spi_ChannelHandler_StartAsynch(hwId,  jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex]);
+				}
+				else
+				{
+					/* Pooling */
+					retVal = Spi_ChannelHandler_StartPooling(hwId, jobCfg->channelList[Rnt.controllerRnt[hwId].channelIndex]);
+				}
+
+				if(E_OK != retVal)
+				{
+					Rnt.jobRnt[requestJobId].status = SPI_JOB_FAILED;
+				}
+				else
+				{
+					/* Do Nothing */
+				}
+			}
 		}
 	}
 	else
